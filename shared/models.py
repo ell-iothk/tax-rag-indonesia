@@ -5,7 +5,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# baca .env dari root ai-projects
 # akar repo = dua tingkat di atas file ini (shared/models.py -> shared -> akar)
 ROOT = Path(__file__).resolve().parent.parent
 

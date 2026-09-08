@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 
 # baca .env dari root project
-load_dotenv(os.path.expanduser("~/ai-projects/.env"))
+from pathlib import Path as _P
+load_dotenv(_P(__file__).resolve().parent.parent.parent / ".env")
 
 print("host  :", os.getenv("LANGFUSE_HOST"))
 print("public:", (os.getenv("LANGFUSE_PUBLIC_KEY") or "")[:12], "...")

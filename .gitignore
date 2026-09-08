@@ -9,12 +9,12 @@ __pycache__/
 *.pyc
 
 # cache model (~4 GB)
-.hf-cache/
+.hf-cache
 
 # hasil olahan, bisa dibuat ulang dengan: python src/ingest.py
 data/processed/
 
-# PDF asli dari JDIH, bisa diunduh ulang. link ada di data/raw_asli/SUMBER.md
+# PDF asli dari JDIH, bisa diunduh ulang. link ada di README
 data/raw_asli/*.pdf
 
 # log

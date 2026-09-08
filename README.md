@@ -99,7 +99,7 @@ Tabel TER (127 baris tarif) diverifikasi terhadap **8 contoh perhitungan resmi**
 ### Setup
 
 ```bash
-git clone https://github.com/<username>/tax-rag-indonesia.git
+git clone https://github.com/ell-iothk/tax-rag-indonesia.git
 cd tax-rag-indonesia
 
 python3 -m venv .venv
