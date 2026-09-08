@@ -1,0 +1,484 @@
+{
+  "akurasi": 0.64,
+  "refusal_rate": 1.0,
+  "halusinasi": 0.0,
+  "tolak_palsu": 0.12,
+  "latensi_rata": 3.204908733565632,
+  "detail": [
+    {
+      "id": "q001",
+      "kategori": "single_hop",
+      "pertanyaan": "Biaya jabatan itu berapa persen dan maksimal berapa?",
+      "jawaban": "Biaya jabatan sebesar 5% dari penghasilan bruto, paling banyak Rp6.000.000 setahun atau Rp500.000 sebulan (potongan [1], PMK 168/2023 Pasal 10 ayat (2)).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 10",
+        "pp58-2023 Penjelasan Pasal 2",
+        "pmk168-2023 Pasal 11",
+        "pp58-2023 Lampiran huruf D - Tarif Efektif Harian",
+        "pmk168-2023 Contoh I.6 - Natura dan Kenikmatan (Tuan I)"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q002",
+      "kategori": "single_hop",
+      "pertanyaan": "Biaya pensiun maksimal berapa setahun?",
+      "jawaban": "Biaya pensiun maksimal sebesar Rp2.400.000 per tahun (potongan [1], PMK 168/2023 Pasal 11 ayat 2).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 11",
+        "pp58-2023 Penjelasan Pasal 2",
+        "pmk168-2023 Contoh II - Uang Pensiun Berkala (Tuan J)",
+        "pmk168-2023 Pasal 10",
+        "pmk168-2023 Pasal 17"
+      ],
+      "skor": 0.3333333333333333,
+      "benar": false
+    },
+    {
+      "id": "q003",
+      "kategori": "single_hop",
+      "pertanyaan": "Pekerja asing dipotong pajak berapa persen?",
+      "jawaban": "20% (potongan [2] dan [4], PMK 168/2023 Pasal 14)",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 4",
+        "pmk168-2023 Pasal 14",
+        "pmk168-2023 Pasal 16",
+        "pmk168-2023 Bagian Pertama angka VIII - Wajib Pajak Orang Pribadi Luar Negeri",
+        "pmk168-2023 Pasal 3"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q004",
+      "kategori": "single_hop",
+      "pertanyaan": "Kalau saya freelancer, dasar pengenaan pajaknya berapa dari penghasilan bruto?",
+      "jawaban": "Untuk freelancer (Bukan Pegawai), dasar pengenaan pajak adalah 50% dari jumlah penghasilan bruto (potongan [3], PMK 168/2023 Pasal 12 ayat 3).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 8",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pmk168-2023 Pasal 12",
+        "pmk168-2023 Pasal 12",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q005",
+      "kategori": "single_hop",
+      "pertanyaan": "TER dibagi jadi berapa kategori?",
+      "jawaban": "Terdapat 3 kategori (Kategori A, B, C) seperti tercantum dalam Pasal 2 ayat (4). (potongan [2], PP 58/2023 Pasal 2 ayat 4)",
+      "menolak": false,
+      "chunk": [
+        "pp58-2023 Pasal 2",
+        "pp58-2023 Pasal 2",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 I. UMUM"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q006",
+      "kategori": "single_hop",
+      "pertanyaan": "Kategori C itu untuk status PTKP yang mana?",
+      "jawaban": "Kategori C untuk status Penghasilan Tidak Kena Pajak kawin dengan 3 tanggungan (K/3). (potongan [2], PMK 168/2023 Pasal 2)",
+      "menolak": false,
+      "chunk": [
+        "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
+        "pp58-2023 Pasal 2",
+        "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
+        "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
+        "pmk168-2023 Contoh III - Anggota Dewan Komisaris (Tuan P)"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q007",
+      "kategori": "single_hop",
+      "pertanyaan": "Upah harian sampai berapa yang tidak kena potongan pajak?",
+      "jawaban": "Upah harian sampai Rp450.000 tidak kena potongan pajak (potongan [1], PMK 168/2023 Lampiran D Pasal 10).",
+      "menolak": false,
+      "chunk": [
+        "pp58-2023 Lampiran huruf D - Tarif Efektif Harian",
+        "pmk168-2023 Pasal 12",
+        "pmk168-2023 Bagian Pertama angka III - Pegawai Tidak Tetap",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pmk168-2023 Pasal 10"
+      ],
+      "skor": 0.5,
+      "benar": true
+    },
+    {
+      "id": "q008",
+      "kategori": "single_hop",
+      "pertanyaan": "Aturan TER ini mulai berlaku kapan?",
+      "jawaban": "Aturan TER ini mulai berlaku pada tanggal 1 Januari 2024 (potongan [1], PP 58/2023 Pasal 5).",
+      "menolak": false,
+      "chunk": [
+        "pp58-2023 Pasal 5",
+        "pmk168-2023 Pasal 25",
+        "pp58-2023 Pasal 4",
+        "pp58-2023 I. UMUM",
+        "pp58-2023 Pasal 1"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q009",
+      "kategori": "single_hop",
+      "pertanyaan": "Selebgram dan content creator masuk kategori penerima penghasilan apa?",
+      "jawaban": "Selebgram dan content creator masuk kategori \"Bukan Pegawai\" sebagaimana dimaksud dalam pasal 3 ayat (1) huruf e dan pasal 2 ayat (2) huruf b, (potongan [1], PMK 168/2023 Pasal 3).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 3",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B",
+        "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
+        "pmk168-2023 Pasal 12",
+        "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q010",
+      "kategori": "single_hop",
+      "pertanyaan": "Siapa saja yang dianggap tenaga ahli?",
+      "jawaban": "Tenaga ahli dianggap sebagai pemain musik, pembawa acara, penyanyi, pelawak, bintang film, bintang sinetron, bintang iklan, sutradara, kru film, foto model, peragawan/peragawati, pemain drama, penari, pemahat, pelukis, pembuat/pencipta konten pada media yang dibagikan secara daring (influencer, selebgram, blogger, vlogger, dan sejenis lainnya), dan seniman lainnya. (potongan [2], PMK 168/2023 Pasal 1)",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 3",
+        "pmk168-2023 Pasal 1",
+        "pmk168-2023 Pasal 1",
+        "pmk168-2023 Pasal 1",
+        "pmk168-2023 Pasal 18"
+      ],
+      "skor": 0.0,
+      "benar": false
+    },
+    {
+      "id": "q011",
+      "kategori": "single_hop",
+      "pertanyaan": "Zakat yang saya bayar lewat kantor bisa mengurangi pajak?",
+      "jawaban": "Ya, zakat yang dibayarkan lewat kantor bisa mengurangi pajak. (potongan [3], PMK 168/2023 Pasal 10)",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 7",
+        "pmk168-2023 Pasal 2",
+        "pmk168-2023 Pasal 10",
+        "pmk168-2023 Pasal 11",
+        "pmk168-2023 Pasal 17"
+      ],
+      "skor": 0.25,
+      "benar": false
+    },
+    {
+      "id": "q012",
+      "kategori": "single_hop",
+      "pertanyaan": "Masa Pajak Terakhir itu maksudnya bulan apa?",
+      "jawaban": "Masa Pajak Terakhir itu maksudnya bulan Desember (potongan [5], PMK 168/2023 Pasal 18).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 18",
+        "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
+        "pmk168-2023 Pasal 15",
+        "pmk168-2023 Pasal 21",
+        "pmk168-2023 Pasal 1"
+      ],
+      "skor": 0.25,
+      "benar": false
+    },
+    {
+      "id": "q013",
+      "kategori": "single_hop",
+      "pertanyaan": "Tarif TER bulanan paling tinggi berapa persen?",
+      "jawaban": "Tarif ter bulanan paling tinggi adalah 34%. (potongan [1], PMK 168/2023 Pasal 10)",
+      "menolak": false,
+      "chunk": [
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf D - Tarif Efektif Harian"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q014",
+      "kategori": "single_hop",
+      "pertanyaan": "Kedutaan asing wajib memotong PPh 21 pegawainya?",
+      "jawaban": "Tidak, kedutaan asing tidak wajib memotong PPh 21 pegawainya karena pejabat perwakilan diplomatik dan konsulat termasuk dalam kelompok yang tidak termasuk penerima penghasilan yang dipotong PPh Pasal 21, dengan syarat bukan warga negara Indonesia dan di Indonesia tidak menerima penghasilan lain di luar jabatan (potongan [1], PMK 168/2023 Pasal 4 ayat a).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 4",
+        "pmk168-2023 Pasal 18",
+        "pmk168-2023 Pasal 16",
+        "pmk168-2023 Pasal 16",
+        "pmk168-2023 Pasal 18"
+      ],
+      "skor": 0.75,
+      "benar": true
+    },
+    {
+      "id": "q015",
+      "kategori": "single_hop",
+      "pertanyaan": "Aturan lama apa yang dicabut oleh PMK 168/2023?",
+      "jawaban": "Aturan lama yang dicabut oleh PMK 168/2023 adalah:  \na. Peraturan Menteri Keuangan Nomor 250/PMK.03/2008 tentang Besarnya Biaya Jabatan atau Biaya Pensiun yang dapat Dikurangkan dari Penghasilan Bruto Pegawai Tetap atau Pensiunan;  \nb. Peraturan Menteri Keuangan Nomor 252/PMK.03/2008 tentang Petunjuk Pelaksanaan Pemotongan Pajak atas Penghasilan Sehubungan dengan Pekerjaan, Jasa, dan Kegiatan Orang Pribadi;  \nc. Peraturan Menteri Keuangan Nomor 102/PMK.010/2016 tentang Penetapan Bagian Penghasilan Sehubungan dengan Pekerjaan dari Pegawai Harian dan Mingguan serta Pegawai Tidak Tetap Lainnya yang Tidak Dikenakan Pemotongan Pajak Penghasilan; dan  \nd. Pasal 5, Pasal 8, Bagian Pertama angka I, dan Bagian Kedua angka I Lampiran Peraturan Menteri Keuangan Nomor 262/PMK.03/2010 tentang Tata Cara Pemotongan Pajak Penghasilan Pasal 21 bagi Pejabat Negara, PNS, Anggota TNI, Anggota POLRI, dan Pensiunannya atas Penghasilan yang Menjadi Beban APBN atau APBD. (potongan [2], PMK 168/2023 Pasal 24)",
+      "menolak": false,
+      "chunk": [
+        "pp58-2023 Pasal 4",
+        "pmk168-2023 Pasal 24",
+        "pmk168-2023 Pasal 25",
+        "pp58-2023 Pasal 5",
+        "pmk168-2023 Contoh I.2.2.3 - Berhenti Bekerja dan Kehilangan Kewajiban Pajak Subjektif (Tuan E)"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q016",
+      "kategori": "multi_hop",
+      "pertanyaan": "Saya lajang tanpa tanggungan, gaji 10 juta sebulan, kena TER berapa persen?",
+      "jawaban": "Saya lajang tanpa tanggungan termasuk status TK/0, yang termasuk Kategori A. Penghasilan bruto bulanan Rp10.000.000 jatuh di rentang Rp10.050.000 (di atas Rp10.050.000 sampai dengan Rp10.350.000), sehingga tarif pajaknya 2,25%. (potongan [1], PMK 168/2023 Pasal 10)",
+      "menolak": false,
+      "chunk": [
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B",
+        "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B"
+      ],
+      "skor": 0.3333333333333333,
+      "benar": false
+    },
+    {
+      "id": "q017",
+      "kategori": "multi_hop",
+      "pertanyaan": "Kenapa potongan pajak bulan Desember beda dengan bulan lain?",
+      "jawaban": "Karena pada bulan Desember, pajak dihitung berdasarkan selisih total tahunan dengan jumlah yang telah dipotong dari bulan Januari hingga November, sedangkan untuk bulan-bulan lainnya, pemotongan dilakukan secara proporsional terhadap tarif efektif bulanan (potongan [2] dan [5]).  \nIni sesuai dengan ketentuan Pasal 18 ayat (1) huruf b dan penjelasan Pasal 2 tentang perhitungan pajak bulan Desember (potongan [2], [5]).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
+        "pmk168-2023 Pasal 18",
+        "pmk168-2023 Pasal 1",
+        "pmk168-2023 Pasal 21",
+        "pp58-2023 Penjelasan Pasal 2"
+      ],
+      "skor": 0.3333333333333333,
+      "benar": false
+    },
+    {
+      "id": "q018",
+      "kategori": "multi_hop",
+      "pertanyaan": "Pensiunan status kawin 2 anak dengan uang pensiun 6,3 juta sebulan, tarifnya berapa?",
+      "jawaban": "Tarif efektif bulanan untuk pensiunan dengan status kawin 2 anak adalah 0,25%. (potongan [1], PMK 168/2023 Pasal 10)",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Contoh II - Uang Pensiun Berkala (Tuan J)",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B",
+        "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
+        "pmk168-2023 Contoh I.5 - Tunjangan Pajak (Tuan H)",
+        "pmk168-2023 Contoh I.3 - Penghasilan dalam Mata Uang Asing (Tuan F)"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q019",
+      "kategori": "multi_hop",
+      "pertanyaan": "PTKP untuk karyawati yang sudah menikah dihitung bagaimana?",
+      "jawaban": "PTKP untuk karyawati yang sudah menikah dihitung sebesar Penghasilan Tidak Kena Pajak untuk dirinya sendiri; (potongan [1], PMK 168/2023 Pasal 9 ayat (2) a).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 9",
+        "pmk168-2023 Contoh II - Uang Pensiun Berkala (Tuan J)",
+        "pmk168-2023 Contoh III - Anggota Dewan Komisaris (Tuan P)",
+        "pmk168-2023 Contoh I.5 - Tunjangan Pajak (Tuan H)",
+        "pmk168-2023 Contoh I.4 - PPh Ditanggung Pemberi Kerja (Tuan G)"
+      ],
+      "skor": 0.5,
+      "benar": true
+    },
+    {
+      "id": "q020",
+      "kategori": "multi_hop",
+      "pertanyaan": "Kalau perusahaan kelebihan motong pajak saya, gimana?",
+      "jawaban": "Kalau perusahaan kelebihan motong pajak Anda, kelebihan tersebut wajib dikembalikan oleh perusahaan kepada Anda paling lambat akhir bulan berikutnya setelah Masa Pajak Terakhir (potongan [1], PMK 168/2023 Pasal 21).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Pasal 21",
+        "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
+        "pmk168-2023 Pasal 22",
+        "pmk168-2023 Contoh I.2.1.2 - Kewajiban Pajak Subjektif Dimulai Pertengahan Tahun (Tuan C)",
+        "pmk168-2023 Bagian Pertama angka VII - Mantan Pegawai"
+      ],
+      "skor": 0.5,
+      "benar": true
+    },
+    {
+      "id": "q021",
+      "kategori": "multi_hop",
+      "pertanyaan": "Pekerja lepas dengan upah 3 juta per hari, pajaknya dihitung pakai apa?",
+      "jawaban": "Pajaknya dihitung dengan menggunakan tarif Pasal 17 ayat (1) huruf a dikalikan dengan 50% dari jumlah penghasilan bruto sehari (potongan [1], PMK 168/2023 Pasal 10).",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Bagian Pertama angka III - Pegawai Tidak Tetap",
+        "pp58-2023 Penjelasan Pasal 2",
+        "pmk168-2023 Pasal 3",
+        "pp58-2023 Lampiran huruf D - Tarif Efektif Harian",
+        "pmk168-2023 Contoh I.3 - Penghasilan dalam Mata Uang Asing (Tuan F)"
+      ],
+      "skor": 0.75,
+      "benar": true
+    },
+    {
+      "id": "q022",
+      "kategori": "multi_hop",
+      "pertanyaan": "Dokter yang praktik di rumah sakit, penghasilan brutonya dihitung dari mana?",
+      "jawaban": "Penghasilan bruto dokter yang praktik di rumah sakit dihitung dari jasa dokter yang dibayar oleh pasien melalui rumah sakit dan/atau klinik sebelum dipotong biaya-biaya atau bagi hasil oleh rumah sakit dan/atau klinik. (potongan [1], PMK 168/2023 Pasal 10 angka IV huruf b)",
+      "menolak": false,
+      "chunk": [
+        "pmk168-2023 Bagian Pertama angka IV - Bukan Pegawai",
+        "pmk168-2023 Pasal 12",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A"
+      ],
+      "skor": 1.0,
+      "benar": true
+    },
+    {
+      "id": "q023",
+      "kategori": "unanswerable",
+      "pertanyaan": "Tarif PPN sekarang berapa persen?",
+      "jawaban": "Tidak ditemukan dalam dokumen.",
+      "menolak": true,
+      "chunk": [
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf D - Tarif Efektif Harian",
+        "pmk168-2023 Contoh I.4 - PPh Ditanggung Pemberi Kerja (Tuan G)",
+        "pp58-2023 I. UMUM",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A"
+      ],
+      "benar": true
+    },
+    {
+      "id": "q024",
+      "kategori": "unanswerable",
+      "pertanyaan": "Tarif PPh badan berapa persen?",
+      "jawaban": "Tidak ditemukan dalam dokumen.",
+      "menolak": true,
+      "chunk": [
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf D - Tarif Efektif Harian",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B",
+        "pp58-2023 Lampiran huruf B - Tarif Efektif Bulanan Kategori B",
+        "pp58-2023 Penjelasan Pasal 2"
+      ],
+      "benar": true
+    },
+    {
+      "id": "q025",
+      "kategori": "unanswerable",
+      "pertanyaan": "Pajak final untuk UMKM berapa persen?",
+      "jawaban": "Tidak ditemukan dalam dokumen.",
+      "menolak": true,
+      "chunk": [
+        "pmk168-2023 Pasal 14",
+        "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
+        "pmk168-2023 Pasal 1",
+        "pmk168-2023 Pasal 1",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A"
+      ],
+      "benar": true
+    },
+    {
+      "id": "q026",
+      "kategori": "unanswerable",
+      "pertanyaan": "Kapan batas akhir lapor SPT Tahunan orang pribadi?",
+      "jawaban": "Tidak ditemukan dalam dokumen.",
+      "menolak": true,
+      "chunk": [
+        "pmk168-2023 Pasal 1",
+        "pmk168-2023 Pasal 1",
+        "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
+        "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
+        "pmk168-2023 Contoh I.1 - Pegawai Tetap Selama Satu Tahun Pajak (Tuan A)"
+      ],
+      "benar": true
+    },
+    {
+      "id": "q027",
+      "kategori": "unanswerable",
+      "pertanyaan": "Berapa gaji rata-rata konsultan pajak di Jakarta?",
+      "jawaban": "Tidak ditemukan dalam dokumen.",
+      "menolak": true,
+      "chunk": [
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pmk168-2023 Contoh I.2.1.2 - Kewajiban Pajak Subjektif Dimulai Pertengahan Tahun (Tuan C)",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
+        "pp58-2023 Penjelasan Pasal 2"
+      ],
+      "benar": true
+    },
+    {
+      "id": "q028",
+      "kategori": "lexical",
+      "pertanyaan": "Apa isi Pasal 21 ayat (1) PMK 168 Tahun 2023?",
+      "jawaban": "Tidak ditemukan dalam dokumen.",
+      "menolak": true,
+      "chunk": [
+        "pmk168-2023 Lampiran huruf A - Format Surat Pernyataan Daftar Pemberi Kerja",
+        "pp58-2023 I. UMUM",
+        "pmk168-2023 Pasal 1",
+        "pp58-2023 Penjelasan Pasal 2",
+        "pmk168-2023 Bagian Pertama angka V - Peserta Kegiatan"
+      ],
+      "skor": 0.0,
+      "benar": false
+    },
+    {
+      "id": "q029",
+      "kategori": "lexical",
+      "pertanyaan": "Lampiran huruf D PP 58 Tahun 2023 berisi apa?",
+      "jawaban": "Tidak ditemukan dalam dokumen.",
+      "menolak": true,
+      "chunk": [
+        "pp58-2023 I. UMUM",
+        "pmk168-2023 Lampiran huruf A - Format Surat Pernyataan Daftar Pemberi Kerja",
+        "pp58-2023 Pasal 5",
+        "pp58-2023 Pasal 2",
+        "pmk168-2023 Pasal 23"
+      ],
+      "skor": 0.0,
+      "benar": false
+    },
+    {
+      "id": "q030",
+      "kategori": "lexical",
+      "pertanyaan": "PP 58 Tahun 2023 mencabut ketentuan apa?",
+      "jawaban": "PP 58 Tahun 2023 tidak mencabut ketentuan apa pun. Tidak ditemukan dalam dokumen.",
+      "menolak": true,
+      "chunk": [
+        "pp58-2023 I. UMUM",
+        "pp58-2023 Pasal 5",
+        "pp58-2023 Pasal 4",
+        "pmk168-2023 Pasal 24",
+        "pmk168-2023 Pasal 1"
+      ],
+      "skor": 0.5,
+      "benar": false
+    }
+  ]
+}
