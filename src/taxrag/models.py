@@ -27,7 +27,15 @@ def get_embeddings():
     print(f"[memuat embedding: {EMBED_MODEL}]")
     return HuggingFaceEmbeddings(
         model_name=EMBED_MODEL,
-        model_kwargs={"device": "cpu"},
+        model_kwargs={
+            "device": "cpu",
+            # bge-m3 punya dua format bobot: pytorch_model.bin (2,27 GB, format
+            # lama) dan model.safetensors (2,27 GB). Tanpa flag ini,
+            # sentence-transformers mengunduh .bin lebih dulu, lalu transformers
+            # menolaknya karena CVE-2025-32434 dan mengunduh safetensors juga.
+            # Akibatnya 4,5 GB terunduh untuk satu model, separuhnya terbuang.
+            "model_kwargs": {"use_safetensors": True},
+        },
         encode_kwargs={"normalize_embeddings": True},
     )
 
