@@ -1,16 +1,13 @@
 """Ukur kualitas retrieval terhadap golden set. Metrik dihitung ranx."""
-import sys as _sys
-from pathlib import Path as _Path
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
 
 import json
 import re
 from pathlib import Path
 import sys
-from shared.retrieval import get_retriever, MODE
+from taxrag.retrieval import get_retriever, MODE
 from ranx import Qrels, Run, evaluate
 
-from shared.models import get_embeddings
+from taxrag.models import get_embeddings
 
 GOLDEN = Path("eval/golden_set.jsonl")
 HASIL = Path("eval/hasil.json")

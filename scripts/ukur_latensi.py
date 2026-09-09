@@ -1,14 +1,11 @@
 """Ukur latensi tiap konfigurasi retriever."""
-import sys as _sys
-from pathlib import Path as _Path
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
 
 import json
 import statistics
 import time
 from pathlib import Path
 
-from shared.retrieval import (dense_retriever, hybrid_retriever,
+from taxrag.retrieval import (dense_retriever, hybrid_retriever,
                        dense_rerank_retriever)
 
 soal = [json.loads(l) for l in open("eval/golden_set.jsonl", encoding="utf-8")]

@@ -16,7 +16,7 @@ except ImportError:
                                               ContextualCompressionRetriever)
     from langchain_classic.retrievers.document_compressors import CrossEncoderReranker
 
-from shared.models import get_embeddings, get_reranker
+from taxrag.models import get_embeddings, get_reranker
 
 QDRANT_URL = "http://localhost:6333"
 

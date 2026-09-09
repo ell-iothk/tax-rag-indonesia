@@ -4,7 +4,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from rag import buat_chain
+from taxrag.rag import buat_chain
 
 GOLDEN = Path("eval/golden_set.jsonl")
 OUT = Path("eval/jawaban_untuk_ragas.json")

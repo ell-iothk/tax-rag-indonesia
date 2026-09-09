@@ -1,7 +1,4 @@
 """Ukur kualitas jawaban akhir, bukan cuma retrieval."""
-import sys as _sys
-from pathlib import Path as _Path
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
 
 import json
 import re
@@ -10,8 +7,8 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from rag import buat_chain
-from shared.models import get_tracer
+from taxrag.rag import buat_chain
+from taxrag.models import get_tracer
 
 GOLDEN = Path("eval/golden_set.jsonl")
 HASIL = Path("eval/hasil_jawaban.json")

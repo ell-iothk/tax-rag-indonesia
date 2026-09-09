@@ -104,8 +104,17 @@ cd tax-rag-indonesia
 
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e .
 ```
+> `-e` berarti *editable install* — proyek dipasang sebagai tautan, bukan
+> salinan, sehingga perubahan kode langsung berlaku tanpa install ulang.
+> Ini yang membuat `from taxrag.retrieval import ...` bekerja dari folder
+> mana pun, tanpa perlu mengutak-atik `sys.path`.
+>
+> Model embedding (bge-m3, 2,2 GB) dan reranker (bge-reranker-v2-m3, 2,2 GB)
+> diunduh otomatis saat pertama dijalankan ke `.hf-cache/`. Sediakan ~5 GB
+> ruang disk. Kalau sudah punya cache HuggingFace di tempat lain:
+> `export HF_HOME=/jalur/ke/cache`
 
 Siapkan model bahasa:
 
@@ -125,8 +134,8 @@ docker compose up -d
 Bangun index:
 
 ```bash
-python src/ingest.py          # PDF → 88 chunk
-python src/index_qdrant.py    # chunk → Qdrant (2–5 menit di CPU)
+python scripts/ingest.py          # PDF → 88 chunk
+python scripts/index_qdrant.py    # chunk → Qdrant (2–5 menit di CPU)
 ```
 
 ### Pakai
@@ -150,10 +159,10 @@ Perintah CLI: `/sumber` menampilkan potongan yang dipakai, `/keluar` untuk seles
 ### Evaluasi ulang
 
 ```bash
-python src/evaluate.py              # metrik retrieval
-python src/evaluate.py hybrid       # bandingkan konfigurasi lain
-python src/evaluate_jawaban.py      # metrik kualitas jawaban
-python src/ukur_latensi.py          # p50 dan p95
+python scripts/evaluate.py              # metrik retrieval
+python scripts/evaluate.py hybrid       # bandingkan konfigurasi lain
+python scripts/evaluate_jawaban.py      # metrik kualitas jawaban
+python scripts/ukur_latensi.py          # p50 dan p95
 ```
 
 ---
@@ -228,31 +237,41 @@ Instruksi "baca semua potongan" berhasil menghilangkan halusinasi dari 0,200 men
 
 ```
 .
+.
+├── pyproject.toml        metadata + dependensi (PEP 621)
+├── src/
+│   └── taxrag/           package inti, di-import
+│       ├── models.py     pemuat model dengan cache
+│       ├── chunking.py   pipeline chunking + teknik lain (dikomentari)
+│       ├── retrieval.py  dense/sparse/hybrid/rerank/routed
+│       └── rag.py        LCEL chain
+├── scripts/              entry point, dijalankan langsung
+│   ├── ingest.py         PDF → chunk
+│   ├── index_qdrant.py   chunk → Qdrant
+│   ├── tanya.py          CLI interaktif
+│   ├── evaluate*.py      evaluator
+│   └── _arsip/           skrip diagnosis dan pendekatan yang ditinggalkan
 ├── data/
 │   ├── raw/              PDF bersih, input pipeline
-│   ├── raw_asli/         PDF asli dari JDIH, arsip
+│   ├── raw_asli/         PDF asli dari JDIH (tidak masuk git)
 │   └── processed/        chunks.jsonl (dihasilkan, tidak masuk git)
 ├── eval/
 │   ├── golden_set.jsonl  30 soal, ditulis manual
 │   ├── hasil.json        metrik retrieval per konfigurasi
 │   └── hasil_jawaban.json
-├── shared/
-│   ├── models.py         pemuat model dengan cache
-│   ├── chunking.py       pipeline chunking + teknik lain (dikomentari)
-│   └── retrieval.py      dense/sparse/hybrid/rerank/routed
-├── src/
-│   ├── ingest.py         PDF → chunk
-│   ├── index_qdrant.py   chunk → Qdrant
-│   ├── rag.py            LCEL chain
-│   ├── tanya.py          CLI interaktif
-│   ├── evaluate*.py      evaluator
-│   └── _arsip/           skrip diagnosis dan pendekatan yang ditinggalkan
 ├── docker-compose.yml
 ├── Modelfile.qwen3-id
-└── jalan.sh              startup satu perintah
+└── rag.sh                startup satu perintah
 ```
 
-Teknik yang belum diuji ditulis sebagai kerangka berkomentar di `shared/chunking.py` dan `shared/retrieval.py`, lengkap dengan penjelasan cara kerja: parent-child chunking, semantic chunking, late chunking, MMR, metadata pre-filter, HyDE, multi-query.
+Pemisahan `src/` dan `scripts/` mengikuti **src-layout** yang direkomendasikan
+PyPA: `src/taxrag/` berisi kode yang di-*import*, `scripts/` berisi kode yang
+di-*jalankan*. Karena akar repo tidak berisi package apa pun, satu-satunya cara
+import bekerja adalah benar-benar meng-install — sehingga kesalahan setup
+ketahuan di mesin sendiri, bukan di mesin orang lain.
+
+
+Teknik yang belum diuji ditulis sebagai kerangka berkomentar di `src/taxrag/chunking.py` dan `src/taxrag/retrieval.py`, lengkap dengan penjelasan cara kerja: parent-child chunking, semantic chunking, late chunking, MMR, metadata pre-filter, HyDE, multi-query.
 
 ---
 

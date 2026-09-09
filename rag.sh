@@ -27,7 +27,7 @@ ok "docker compose aktif"
 echo "[2/4] Qdrant"
 JML=$(curl -s http://localhost:6333/collections/tax_docs \
       | grep -o '"points_count":[0-9]*' | cut -d: -f2)
-[ -z "$JML" ] && gagal "collection 'tax_docs' tidak ada. Jalankan: python src/index_qdrant.py"
+[ -z "$JML" ] && gagal "collection 'tax_docs' tidak ada. Jalankan: python scripts/index_qdrant.py"
 ok "collection tax_docs: $JML titik"
 
 # --- 3. Ollama ---
@@ -42,9 +42,9 @@ if [ -d "$PROJ/.venv" ]; then
 elif [ -n "$VIRTUAL_ENV" ]; then
     echo "  (memakai venv yang sudah aktif)"
 else
-    gagal "venv tidak ada. Jalankan: python3 -m venv .venv && pip install -r requirements.txt"
+    gagal "venv tidak ada. Jalankan: python3 -m venv .venv && pip install -e ."
 fi
 
 echo ""
 cd "$PROJ"
-python src/tanya.py
+python scripts/tanya.py

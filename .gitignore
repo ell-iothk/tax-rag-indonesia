@@ -19,3 +19,7 @@ data/raw_asli/*.pdf
 
 # log
 *.log
+
+*.egg-info/
+build/
+dist/

@@ -1,7 +1,4 @@
 """Muat chunk ke Qdrant."""
-import sys as _sys
-from pathlib import Path as _Path
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
 
 import json
 from pathlib import Path
@@ -10,7 +7,7 @@ from langchain_core.documents import Document
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 
-from shared.models import get_embeddings
+from taxrag.models import get_embeddings
 
 CHUNKS = Path("data/processed/chunks.jsonl")
 QDRANT_URL = "http://localhost:6333"

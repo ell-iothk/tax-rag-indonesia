@@ -5,8 +5,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# akar repo = dua tingkat di atas file ini (shared/models.py -> shared -> akar)
-ROOT = Path(__file__).resolve().parent.parent
+# akar repo = tiga tingkat di atas file ini (src/taxrag/models.py -> akar)
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 load_dotenv(ROOT / ".env")
 

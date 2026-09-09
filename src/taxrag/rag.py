@@ -1,14 +1,11 @@
 """RAG chain: retrieval -> prompt -> LLM -> jawaban."""
-import sys as _sys
-from pathlib import Path as _Path
-_sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
 
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 
-from shared.models import get_llm, get_tracer
-from shared.retrieval import get_retriever
+from taxrag.models import get_llm, get_tracer
+from taxrag.retrieval import get_retriever
 
 COLLECTION = "tax_docs"
 CHUNKS = "data/processed/chunks.jsonl"

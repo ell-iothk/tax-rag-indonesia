@@ -1,0 +1,41 @@
+[project]
+name = "taxrag"
+version = "0.1.0"
+description = "RAG lokal untuk dokumen perpajakan Indonesia"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+dependencies = [
+    "langchain",
+    "langchain-community",
+    "langchain-classic",
+    "langchain-text-splitters",
+    "langchain-huggingface",
+    "langchain-qdrant",
+    "langchain-ollama",
+    "pymupdf4llm",
+    "sentence-transformers",
+    "torch",
+    "qdrant-client",
+    "rank-bm25",
+    "ranx",
+    "langfuse",
+    "python-dotenv",
+    "tqdm",
+    "numpy",
+    "pandas",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pytest",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
