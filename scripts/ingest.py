@@ -1,7 +1,6 @@
 """PDF -> chunk. Semua logika ada di taxrag/chunking.py."""
 
 import json
-from collections import Counter
 from pathlib import Path
 
 from taxrag.chunking import pipeline_standar
@@ -23,18 +22,23 @@ if __name__ == "__main__":
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
         for i, d in enumerate(semua, 1):
-            f.write(json.dumps({
-                "id": f"c{i:04d}",
-                "text": d.page_content,
-                **d.metadata,
-            }, ensure_ascii=False) + "\n")
+            f.write(
+                json.dumps(
+                    {
+                        "id": f"c{i:04d}",
+                        "text": d.page_content,
+                        **d.metadata,
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
+            )
 
     p = [len(d.page_content) for d in semua]
     print(f"\nTOTAL {len(semua)} chunk -> {OUT}")
-    print(f"karakter : min {min(p)} | rata {sum(p)//len(p)} | maks {max(p)}")
-    print(f"token    : rata {sum(p)/len(p)/3.5:.0f} | maks {max(p)/3.5:.0f}")
+    print(f"karakter : min {min(p)} | rata {sum(p) // len(p)} | maks {max(p)}")
+    print(f"token    : rata {sum(p) / len(p) / 3.5:.0f} | maks {max(p) / 3.5:.0f}")
     tanpa_pasal = sum(1 for d in semua if not d.metadata.get("pasal"))
-    tanpa_apa2 = sum(1 for d in semua
-                     if not d.metadata.get("pasal") and not d.metadata.get("bab"))
+    tanpa_apa2 = sum(1 for d in semua if not d.metadata.get("pasal") and not d.metadata.get("bab"))
     print(f"tanpa pasal      : {tanpa_pasal}")
     print(f"tanpa bab & pasal: {tanpa_apa2}   <- harus 0")

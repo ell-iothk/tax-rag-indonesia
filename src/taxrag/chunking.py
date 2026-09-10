@@ -24,6 +24,7 @@ Parameter yang dipakai dan alasannya:
     "####" sengaja tidak dipakai: ayat bercetak tebal salah dikenali
     sebagai heading oleh pymupdf4llm.
 """
+
 import re
 from pathlib import Path
 
@@ -41,6 +42,7 @@ SEPARATORS = ["\n\n", "\n", ". ", " ", ""]
 
 # ==================================================== PARSING
 
+
 def pdf_ke_markdown(pdf_path: str | Path) -> str:
     """PDF -> markdown berstruktur heading.
 
@@ -50,10 +52,12 @@ def pdf_ke_markdown(pdf_path: str | Path) -> str:
     perlu regex untuk mendeteksi "Pasal 10".
     """
     import pymupdf4llm
+
     return pymupdf4llm.to_markdown(str(pdf_path), show_progress=False)
 
 
 # ==================================================== CHUNKING (TERUKUR)
+
 
 def markdown_header_chunking(md: str, level: int = 3) -> list[Document]:
     """Potong di batas heading. Metadata terisi otomatis dari judul heading.
@@ -65,14 +69,14 @@ def markdown_header_chunking(md: str, level: int = 3) -> list[Document]:
     headers = [("#", "judul"), ("##", "bab"), ("###", "pasal")][:level]
     splitter = MarkdownHeaderTextSplitter(
         headers_to_split_on=headers,
-        strip_headers=False,   # judul tetap di teks, membantu retrieval
+        strip_headers=False,  # judul tetap di teks, membantu retrieval
     )
     return splitter.split_text(md)
 
 
-def recursive_chunking(docs: list[Document],
-                       size: int = CHUNK_SIZE,
-                       overlap: int = CHUNK_OVERLAP) -> list[Document]:
+def recursive_chunking(
+    docs: list[Document], size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP
+) -> list[Document]:
     """Pecah bagian yang masih terlalu panjang, di batas alami.
 
     Dipakai sebagai TAHAP 2 setelah markdown_header_chunking.
@@ -99,14 +103,17 @@ def tambah_konteks(doc: Document, doc_id: str) -> Document:
     """
     m = doc.metadata
     jalur = " > ".join(x for x in [m.get("bab"), m.get("pasal")] if x)
-    isi = re.sub(r"\*+", "", doc.page_content).strip()   # buang markup tebal
+    isi = re.sub(r"\*+", "", doc.page_content).strip()  # buang markup tebal
     doc.page_content = f"[{doc_id} | {jalur}]\n{isi}" if jalur else isi
     return doc
 
 
 def bersih_metadata(doc: Document, doc_id: str) -> dict:
     """Rapikan metadata: buang markup, tambahkan id dokumen."""
-    b = lambda s: re.sub(r"\*+", "", s or "").strip()
+
+    def b(s):
+        return re.sub(r"\*+", "", s or "").strip()
+
     return {
         "doc": doc_id,
         "judul": b(doc.metadata.get("judul")),

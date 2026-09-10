@@ -23,3 +23,6 @@ data/raw_asli/*.pdf
 *.egg-info/
 build/
 dist/
+
+# model, ~4,5 GB. unduh dengan: python scripts/download_models.py
+models/

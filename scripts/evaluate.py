@@ -2,12 +2,12 @@
 
 import json
 import re
-from pathlib import Path
 import sys
-from taxrag.retrieval import get_retriever, MODE
+from pathlib import Path
+
 from ranx import Qrels, Run, evaluate
 
-from taxrag.models import get_embeddings
+from taxrag.retrieval import MODE, get_retriever
 
 GOLDEN = Path("eval/golden_set.jsonl")
 HASIL = Path("eval/hasil.json")
@@ -34,7 +34,7 @@ def id_dokumen(meta: dict, kunci: str) -> str:
 
 def cocok(meta: dict, kunci: str) -> bool:
     if kunci.startswith("Pasal"):
-        return meta.get("pasal", "") == kunci      # persis, bukan 'in'
+        return meta.get("pasal", "") == kunci  # persis, bukan 'in'
     return kunci in meta.get("bab", "") or kunci in meta.get("pasal", "")
 
 
@@ -52,8 +52,11 @@ def bangun(store, soal):
         skor_per_unit = {}
         for i, doc in enumerate(hasil, 1):
             m = doc.metadata
-            unit = id_dokumen(m, kunci) if cocok(m, kunci) else \
-                   f"{m.get('doc')}::{m.get('pasal') or m.get('bab') or '?'}"
+            unit = (
+                id_dokumen(m, kunci)
+                if cocok(m, kunci)
+                else f"{m.get('doc')}::{m.get('pasal') or m.get('bab') or '?'}"
+            )
             # skor = 1/posisi, karena retriever tidak kembalikan skor mentah.
             # satu unit bisa punya beberapa chunk, ambil yang posisinya tertinggi
             skor_per_unit[unit] = max(skor_per_unit.get(unit, 0.0), 1.0 / i)
@@ -62,10 +65,9 @@ def bangun(store, soal):
 
 
 if __name__ == "__main__":
-    store = get_retriever("tax_docs", "data/processed/chunks.jsonl",mode=mode,
-    top_n=K)
+    store = get_retriever("tax_docs", "data/processed/chunks.jsonl", mode=mode, top_n=K)
 
-    soal = [json.loads(l) for l in open(GOLDEN, encoding="utf-8")]
+    soal = [json.loads(baris) for baris in open(GOLDEN, encoding="utf-8")]
     soal = [q for q in soal if q["category"] != "unanswerable"]
 
     qrels_d, run_d = bangun(store, soal)
@@ -86,13 +88,11 @@ if __name__ == "__main__":
             Run({k: run_d[k] for k in sub}),
             ["recall@5", "ndcg@10"],
         )
-        print(f"  {kat:12s} n={len(sub):2d} | R@5 {h['recall@5']:.3f} "
-              f"| NDCG@10 {h['ndcg@10']:.3f}")
+        print(f"  {kat:12s} n={len(sub):2d} | R@5 {h['recall@5']:.3f} | NDCG@10 {h['ndcg@10']:.3f}")
 
     # yang gagal total
     print("\nGAGAL (jawaban benar tidak masuk top-10):")
-    gagal = [q for q in soal
-             if list(qrels_d[q["id"]])[0] not in run_d[q["id"]]]
+    gagal = [q for q in soal if list(qrels_d[q["id"]])[0] not in run_d[q["id"]]]
     for q in gagal:
         print(f"  {q['id']} ({q['category']}) cari: {list(qrels_d[q['id']])[0]}")
     if not gagal:

@@ -14,7 +14,7 @@ echo "  Asisten Pajak — startup"
 echo "=============================================="
 
 # --- 1. Docker ---
-echo "[1/4] layanan Docker"
+echo "[1/5] layanan Docker"
 if ! docker info >/dev/null 2>&1; then
     gagal "Docker tidak jalan. Jalankan: sudo service docker start"
 fi
@@ -24,19 +24,24 @@ sleep 3
 ok "docker compose aktif"
 
 # --- 2. Qdrant ---
-echo "[2/4] Qdrant"
+echo "[2/5] Qdrant"
 JML=$(curl -s http://localhost:6333/collections/tax_docs \
       | grep -o '"points_count":[0-9]*' | cut -d: -f2)
 [ -z "$JML" ] && gagal "collection 'tax_docs' tidak ada. Jalankan: python scripts/index_qdrant.py"
 ok "collection tax_docs: $JML titik"
 
 # --- 3. Ollama ---
-echo "[3/4] Ollama"
+echo "[3/5] Ollama"
 ollama list 2>/dev/null | grep -q qwen3-id || gagal "model qwen3-id tidak ada"
 ok "model qwen3-id tersedia"
-
-# --- 4. Python ---
-echo "[4/4] Python environment"
+# --- 4. Model embedding ---
+echo "[4/5] model embedding"
+if [ ! -d "$PROJ/models/bge-m3" ]; then
+    gagal "folder models/ tidak ada. Jalankan: python scripts/download_models.py"
+fi
+ok "model tersedia di models/"
+# --- 5. Python ---
+echo "[5/5] Python environment"
 if [ -d "$PROJ/.venv" ]; then
     source "$PROJ/.venv/bin/activate"
 elif [ -n "$VIRTUAL_ENV" ]; then

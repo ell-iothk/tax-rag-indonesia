@@ -7,8 +7,8 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from taxrag.rag import buat_chain
 from taxrag.models import get_tracer
+from taxrag.rag import buat_chain
 
 GOLDEN = Path("eval/golden_set.jsonl")
 HASIL = Path("eval/hasil_jawaban.json")
@@ -17,8 +17,20 @@ REFUSAL = "tidak ditemukan dalam dokumen"
 
 def token_khas(teks: str) -> list[str]:
     """Kata >=5 huruf, angka, atau nominal rupiah."""
-    STOP = {"dalam", "untuk", "dengan", "adalah", "sebesar", "paling",
-            "tidak", "yang", "atau", "beserta", "sesuai", "karena"}
+    STOP = {
+        "dalam",
+        "untuk",
+        "dengan",
+        "adalah",
+        "sebesar",
+        "paling",
+        "tidak",
+        "yang",
+        "atau",
+        "beserta",
+        "sesuai",
+        "karena",
+    }
     kata = re.findall(r"[a-zA-Z]{5,}|[\d.]+%?|rp[\d.]+", teks.lower())
     return [k for k in kata if k not in STOP]
 
@@ -30,8 +42,22 @@ def kunci_utama(benar: str) -> list[str]:
     if angka:
         return angka
     # kalau jawaban tidak mengandung angka, pakai kata benda khas
-    STOP = {"dalam","untuk","dengan","adalah","sebesar","paling","tidak",
-            "yang","atau","beserta","sesuai","karena","dapat","harus"}
+    STOP = {
+        "dalam",
+        "untuk",
+        "dengan",
+        "adalah",
+        "sebesar",
+        "paling",
+        "tidak",
+        "yang",
+        "atau",
+        "beserta",
+        "sesuai",
+        "karena",
+        "dapat",
+        "harus",
+    }
     return [k for k in re.findall(r"[a-z]{6,}", benar.lower()) if k not in STOP][:4]
 
 
@@ -47,13 +73,12 @@ if __name__ == "__main__":
     chain = buat_chain()
     tracer = get_tracer()
 
-    soal = [json.loads(l) for l in open(GOLDEN, encoding="utf-8")]
+    soal = [json.loads(baris) for baris in open(GOLDEN, encoding="utf-8")]
 
     hasil, waktu = [], []
     for q in tqdm(soal, desc="menjawab"):
         t0 = time.perf_counter()
-        out = chain.invoke({"pertanyaan": q["question"]},
-                           config={"callbacks": [tracer]})
+        out = chain.invoke({"pertanyaan": q["question"]}, config={"callbacks": [tracer]})
         waktu.append(time.perf_counter() - t0)
 
         jawaban = out["jawaban"].strip()
@@ -65,12 +90,14 @@ if __name__ == "__main__":
             "pertanyaan": q["question"],
             "jawaban": jawaban,
             "menolak": menolak,
-            "chunk": [f"{d.metadata.get('doc')} {d.metadata.get('pasal') or d.metadata.get('bab') or ''}".strip()
-                      for d in out["docs"]],
+            "chunk": [
+                f"{d.metadata.get('doc')} {d.metadata.get('pasal') or d.metadata.get('bab') or ''}".strip()
+                for d in out["docs"]
+            ],
         }
 
         if q["category"] == "unanswerable":
-            baris["benar"] = menolak          # benar = berhasil menolak
+            baris["benar"] = menolak  # benar = berhasil menolak
         else:
             baris["skor"] = skor_kemiripan(jawaban, q["answer"])
             baris["benar"] = baris["skor"] >= 0.5 and not menolak
@@ -94,7 +121,7 @@ if __name__ == "__main__":
     print(f"refusal rate      : {refusal:.3f}  ({len(tolak_soal)} soal unanswerable)")
     print(f"halusinasi        : {halusinasi:.3f}  <- makin kecil makin baik")
     print(f"menolak padahal bisa: {tolak_palsu:.3f}  <- makin kecil makin baik")
-    print(f"latensi rata-rata : {sum(waktu)/len(waktu):.1f} detik")
+    print(f"latensi rata-rata : {sum(waktu) / len(waktu):.1f} detik")
 
     print("\nper kategori:")
     for kat in sorted({h["kategori"] for h in hasil}):
@@ -109,10 +136,19 @@ if __name__ == "__main__":
             print(f"    jawab : {h['jawaban'][:100]}")
             print(f"    chunk : {h['chunk'][:3]}")
 
-    HASIL.write_text(json.dumps({
-        "akurasi": akurasi, "refusal_rate": refusal,
-        "halusinasi": halusinasi, "tolak_palsu": tolak_palsu,
-        "latensi_rata": sum(waktu) / len(waktu),
-        "detail": hasil,
-    }, indent=2, ensure_ascii=False), encoding="utf-8")
+    HASIL.write_text(
+        json.dumps(
+            {
+                "akurasi": akurasi,
+                "refusal_rate": refusal,
+                "halusinasi": halusinasi,
+                "tolak_palsu": tolak_palsu,
+                "latensi_rata": sum(waktu) / len(waktu),
+                "detail": hasil,
+            },
+            indent=2,
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
     print(f"\ndisimpan -> {HASIL}")

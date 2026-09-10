@@ -3,13 +3,13 @@
   "refusal_rate": 1.0,
   "halusinasi": 0.0,
   "tolak_palsu": 0.12,
-  "latensi_rata": 3.204908733565632,
+  "latensi_rata": 4.011009688633203,
   "detail": [
     {
       "id": "q001",
       "kategori": "single_hop",
       "pertanyaan": "Biaya jabatan itu berapa persen dan maksimal berapa?",
-      "jawaban": "Biaya jabatan sebesar 5% dari penghasilan bruto, paling banyak Rp6.000.000 setahun atau Rp500.000 sebulan (potongan [1], PMK 168/2023 Pasal 10 ayat (2)).",
+      "jawaban": "Biaya jabatan sebesar 5% dari penghasilan bruto, paling banyak Rp6.000.000 setahun atau Rp500.000 sebulan (potongan [1], PMK 168/2023 Pasal 10 ayat (2) huruf a).",
       "menolak": false,
       "chunk": [
         "pmk168-2023 Pasal 10",
@@ -25,13 +25,13 @@
       "id": "q002",
       "kategori": "single_hop",
       "pertanyaan": "Biaya pensiun maksimal berapa setahun?",
-      "jawaban": "Biaya pensiun maksimal sebesar Rp2.400.000 per tahun (potongan [1], PMK 168/2023 Pasal 11 ayat 2).",
+      "jawaban": "Biaya pensiun maksimal sebesar Rp2.400.000 per tahun (potongan [1], PMK 168/2023 Pasal 11 ayat (2)).",
       "menolak": false,
       "chunk": [
         "pmk168-2023 Pasal 11",
+        "pmk168-2023 Pasal 10",
         "pp58-2023 Penjelasan Pasal 2",
         "pmk168-2023 Contoh II - Uang Pensiun Berkala (Tuan J)",
-        "pmk168-2023 Pasal 10",
         "pmk168-2023 Pasal 17"
       ],
       "skor": 0.3333333333333333,
@@ -41,7 +41,7 @@
       "id": "q003",
       "kategori": "single_hop",
       "pertanyaan": "Pekerja asing dipotong pajak berapa persen?",
-      "jawaban": "20% (potongan [2] dan [4], PMK 168/2023 Pasal 14)",
+      "jawaban": "20% (potongan [4], PMK 168/2023 Bagian Pertama angka VIII)",
       "menolak": false,
       "chunk": [
         "pmk168-2023 Pasal 4",
@@ -89,14 +89,14 @@
       "id": "q006",
       "kategori": "single_hop",
       "pertanyaan": "Kategori C itu untuk status PTKP yang mana?",
-      "jawaban": "Kategori C untuk status Penghasilan Tidak Kena Pajak kawin dengan 3 tanggungan (K/3). (potongan [2], PMK 168/2023 Pasal 2)",
+      "jawaban": "Kategori C untuk status Penghasilan Tidak Kena Pajak kawin dengan 3 tanggungan (K/3). (potongan [5], PMK 168/2023 Pasal 2)",
       "menolak": false,
       "chunk": [
         "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
-        "pp58-2023 Pasal 2",
         "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
         "pp58-2023 Lampiran huruf C - Tarif Efektif Bulanan Kategori C",
-        "pmk168-2023 Contoh III - Anggota Dewan Komisaris (Tuan P)"
+        "pmk168-2023 Contoh III - Anggota Dewan Komisaris (Tuan P)",
+        "pp58-2023 Pasal 2"
       ],
       "skor": 1.0,
       "benar": true
@@ -169,13 +169,13 @@
       "id": "q011",
       "kategori": "single_hop",
       "pertanyaan": "Zakat yang saya bayar lewat kantor bisa mengurangi pajak?",
-      "jawaban": "Ya, zakat yang dibayarkan lewat kantor bisa mengurangi pajak. (potongan [3], PMK 168/2023 Pasal 10)",
+      "jawaban": "Ya, zakat yang dibayarkan lewat kantor bisa mengurangi pajak. (potongan [1], PMK 168/2023 Pasal 10 huruf c)",
       "menolak": false,
       "chunk": [
-        "pmk168-2023 Pasal 7",
-        "pmk168-2023 Pasal 2",
         "pmk168-2023 Pasal 10",
         "pmk168-2023 Pasal 11",
+        "pmk168-2023 Pasal 7",
+        "pmk168-2023 Pasal 2",
         "pmk168-2023 Pasal 17"
       ],
       "skor": 0.25,
@@ -185,14 +185,14 @@
       "id": "q012",
       "kategori": "single_hop",
       "pertanyaan": "Masa Pajak Terakhir itu maksudnya bulan apa?",
-      "jawaban": "Masa Pajak Terakhir itu maksudnya bulan Desember (potongan [5], PMK 168/2023 Pasal 18).",
+      "jawaban": "Masa Pajak Terakhir adalah bulan Desember (potongan [1], PMK 168/2023 Pasal 1).",
       "menolak": false,
       "chunk": [
-        "pmk168-2023 Pasal 18",
+        "pmk168-2023 Pasal 1",
         "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
+        "pmk168-2023 Pasal 18",
         "pmk168-2023 Pasal 15",
-        "pmk168-2023 Pasal 21",
-        "pmk168-2023 Pasal 1"
+        "pmk168-2023 Pasal 21"
       ],
       "skor": 0.25,
       "benar": false
@@ -233,12 +233,12 @@
       "id": "q015",
       "kategori": "single_hop",
       "pertanyaan": "Aturan lama apa yang dicabut oleh PMK 168/2023?",
-      "jawaban": "Aturan lama yang dicabut oleh PMK 168/2023 adalah:  \na. Peraturan Menteri Keuangan Nomor 250/PMK.03/2008 tentang Besarnya Biaya Jabatan atau Biaya Pensiun yang dapat Dikurangkan dari Penghasilan Bruto Pegawai Tetap atau Pensiunan;  \nb. Peraturan Menteri Keuangan Nomor 252/PMK.03/2008 tentang Petunjuk Pelaksanaan Pemotongan Pajak atas Penghasilan Sehubungan dengan Pekerjaan, Jasa, dan Kegiatan Orang Pribadi;  \nc. Peraturan Menteri Keuangan Nomor 102/PMK.010/2016 tentang Penetapan Bagian Penghasilan Sehubungan dengan Pekerjaan dari Pegawai Harian dan Mingguan serta Pegawai Tidak Tetap Lainnya yang Tidak Dikenakan Pemotongan Pajak Penghasilan; dan  \nd. Pasal 5, Pasal 8, Bagian Pertama angka I, dan Bagian Kedua angka I Lampiran Peraturan Menteri Keuangan Nomor 262/PMK.03/2010 tentang Tata Cara Pemotongan Pajak Penghasilan Pasal 21 bagi Pejabat Negara, PNS, Anggota TNI, Anggota POLRI, dan Pensiunannya atas Penghasilan yang Menjadi Beban APBN atau APBD. (potongan [2], PMK 168/2023 Pasal 24)",
+      "jawaban": "Aturan lama yang dicabut oleh PMK 168/2023 adalah:  \na. Peraturan Menteri Keuangan Nomor 250/PMK.03/2008 tentang Besarnya Biaya Jabatan atau Biaya Pensiun yang dapat Dikurangkan dari Penghasilan Bruto Pegawai Tetap atau Pensiunan;  \nb. Peraturan Menteri Keuangan Nomor 252/PMK.03/2008 tentang Petunjuk Pelaksanaan Pemotongan Pajak atas Penghasilan Sehubungan dengan Pekerjaan, Jasa, dan Kegiatan Orang Pribadi;  \nc. Peraturan Menteri Keuangan Nomor 102/PMK.010/2016 tentang Penetapan Bagian Penghasilan Sehubungan dengan Pekerjaan dari Pegawai Harian dan Mingguan serta Pegawai Tidak Tetap Lainnya yang Tidak Dikenakan Pemotongan Pajak Penghasilan;  \nd. Pasal 5, Pasal 8, Bagian Pertama angka I, dan Bagian Kedua angka I Lampiran Peraturan Menteri Keuangan Nomor 262/PMK.03/2010 tentang Tata Cara Pemotongan Pajak Penghasilan Pasal 21 bagi Pejabat Negara, PNS, Anggota TNI, Anggota POLRI, dan Pensiunannya atas Penghasilan yang Menjadi Beban APBN atau APBD. (potongan [1], PMK 168/2023 Pasal 24)",
       "menolak": false,
       "chunk": [
-        "pp58-2023 Pasal 4",
         "pmk168-2023 Pasal 24",
         "pmk168-2023 Pasal 25",
+        "pp58-2023 Pasal 4",
         "pp58-2023 Pasal 5",
         "pmk168-2023 Contoh I.2.2.3 - Berhenti Bekerja dan Kehilangan Kewajiban Pajak Subjektif (Tuan E)"
       ],
@@ -297,13 +297,13 @@
       "id": "q019",
       "kategori": "multi_hop",
       "pertanyaan": "PTKP untuk karyawati yang sudah menikah dihitung bagaimana?",
-      "jawaban": "PTKP untuk karyawati yang sudah menikah dihitung sebesar Penghasilan Tidak Kena Pajak untuk dirinya sendiri; (potongan [1], PMK 168/2023 Pasal 9 ayat (2) a).",
+      "jawaban": "PTKP untuk karyawati yang sudah menikah dihitung sebesar Penghasilan Tidak Kena Pajak untuk dirinya sendiri ditambah Penghasilan Tidak Kena Pajak untuk status kawin dan Penghasilan Tidak Kena Pajak untuk anggota keluarga sedarah dan/atau keluarga semenda dalam garis keturunan lurus serta anak angkat yang menjadi tanggungan sepenuhnya (potongan [3], PMK 168/2023 Pasal 9 ayat 2).",
       "menolak": false,
       "chunk": [
         "pmk168-2023 Pasal 9",
-        "pmk168-2023 Contoh II - Uang Pensiun Berkala (Tuan J)",
         "pmk168-2023 Contoh III - Anggota Dewan Komisaris (Tuan P)",
         "pmk168-2023 Contoh I.5 - Tunjangan Pajak (Tuan H)",
+        "pmk168-2023 Contoh II - Uang Pensiun Berkala (Tuan J)",
         "pmk168-2023 Contoh I.4 - PPh Ditanggung Pemberi Kerja (Tuan G)"
       ],
       "skor": 0.5,
@@ -313,16 +313,16 @@
       "id": "q020",
       "kategori": "multi_hop",
       "pertanyaan": "Kalau perusahaan kelebihan motong pajak saya, gimana?",
-      "jawaban": "Kalau perusahaan kelebihan motong pajak Anda, kelebihan tersebut wajib dikembalikan oleh perusahaan kepada Anda paling lambat akhir bulan berikutnya setelah Masa Pajak Terakhir (potongan [1], PMK 168/2023 Pasal 21).",
+      "jawaban": "Kalau perusahaan kelebihan motong pajak Anda, kelebihan tersebut wajib dikembalikan oleh perusahaan kepada Anda paling lambat akhir bulan berikutnya setelah Masa Pajak Terakhir (potongan [1], PMK 168/2023 Pasal 21). Anda juga memiliki hak untuk menerima bukti pemotongan dan pengembalian kelebihan tersebut (potongan [4], PMK 168/2023 Pasal 22 ayat 2).",
       "menolak": false,
       "chunk": [
         "pmk168-2023 Pasal 21",
+        "pmk168-2023 Contoh I.2.1.2 - Kewajiban Pajak Subjektif Dimulai Pertengahan Tahun (Tuan C)",
         "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
         "pmk168-2023 Pasal 22",
-        "pmk168-2023 Contoh I.2.1.2 - Kewajiban Pajak Subjektif Dimulai Pertengahan Tahun (Tuan C)",
         "pmk168-2023 Bagian Pertama angka VII - Mantan Pegawai"
       ],
-      "skor": 0.5,
+      "skor": 1.0,
       "benar": true
     },
     {
@@ -365,8 +365,8 @@
       "menolak": true,
       "chunk": [
         "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A",
-        "pp58-2023 Lampiran huruf D - Tarif Efektif Harian",
         "pmk168-2023 Contoh I.4 - PPh Ditanggung Pemberi Kerja (Tuan G)",
+        "pp58-2023 Lampiran huruf D - Tarif Efektif Harian",
         "pp58-2023 I. UMUM",
         "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A"
       ],
@@ -394,8 +394,8 @@
       "jawaban": "Tidak ditemukan dalam dokumen.",
       "menolak": true,
       "chunk": [
-        "pmk168-2023 Pasal 14",
         "pmk168-2023 Bagian Pertama angka I - Petunjuk Umum untuk Pegawai Tetap dan Pensiunan",
+        "pmk168-2023 Pasal 14",
         "pmk168-2023 Pasal 1",
         "pmk168-2023 Pasal 1",
         "pp58-2023 Lampiran huruf A - Tarif Efektif Bulanan Kategori A"
@@ -439,9 +439,9 @@
       "jawaban": "Tidak ditemukan dalam dokumen.",
       "menolak": true,
       "chunk": [
-        "pmk168-2023 Lampiran huruf A - Format Surat Pernyataan Daftar Pemberi Kerja",
         "pp58-2023 I. UMUM",
         "pmk168-2023 Pasal 1",
+        "pmk168-2023 Lampiran huruf A - Format Surat Pernyataan Daftar Pemberi Kerja",
         "pp58-2023 Penjelasan Pasal 2",
         "pmk168-2023 Bagian Pertama angka V - Peserta Kegiatan"
       ],
@@ -455,8 +455,8 @@
       "jawaban": "Tidak ditemukan dalam dokumen.",
       "menolak": true,
       "chunk": [
-        "pp58-2023 I. UMUM",
         "pmk168-2023 Lampiran huruf A - Format Surat Pernyataan Daftar Pemberi Kerja",
+        "pp58-2023 I. UMUM",
         "pp58-2023 Pasal 5",
         "pp58-2023 Pasal 2",
         "pmk168-2023 Pasal 23"

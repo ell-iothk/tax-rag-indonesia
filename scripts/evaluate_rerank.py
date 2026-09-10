@@ -3,31 +3,30 @@
 import json
 from pathlib import Path
 
+from evaluate_hybrid import bangun_run, kunci_dari
 from ranx import Qrels, Run, compare
 
-from evaluate_hybrid import kunci_dari, bangun_run
-from taxrag.retrieval import (dense_retriever, hybrid_retriever,
-                       dense_rerank_retriever, rerank)
+from taxrag.retrieval import dense_rerank_retriever, dense_retriever, hybrid_retriever, rerank
 
 GOLDEN = Path("eval/golden_set.jsonl")
 K = 10
 METRIK = ["recall@5", "recall@10", "ndcg@10", "mrr"]
 
 if __name__ == "__main__":
-    soal = [json.loads(l) for l in open(GOLDEN, encoding="utf-8")]
+    soal = [json.loads(baris) for baris in open(GOLDEN, encoding="utf-8")]
     soal = [q for q in soal if q["category"] != "unanswerable"]
 
     qrels = {
-        q["id"]: {f"{q['source_doc'].replace('.pdf','')}::{kunci_dari(q['source_section'])}": 1}
+        q["id"]: {f"{q['source_doc'].replace('.pdf', '')}::{kunci_dari(q['source_section'])}": 1}
         for q in soal
     }
 
     konfig = {
-        "dense":              dense_retriever(K),
-        "hybrid_70_30":       hybrid_retriever(K, (0.7, 0.3), K),
-        "rerank_k20":         dense_rerank_retriever(top_n=K, k_kandidat=20),
-        "rerank_k30":         dense_rerank_retriever(top_n=K, k_kandidat=30),
-        "hybrid_rerank":      rerank(hybrid_retriever(20, (0.7, 0.3), 20), top_n=K),
+        "dense": dense_retriever(K),
+        "hybrid_70_30": hybrid_retriever(K, (0.7, 0.3), K),
+        "rerank_k20": dense_rerank_retriever(top_n=K, k_kandidat=20),
+        "rerank_k30": dense_rerank_retriever(top_n=K, k_kandidat=30),
+        "hybrid_rerank": rerank(hybrid_retriever(20, (0.7, 0.3), 20), top_n=K),
     }
 
     runs = []

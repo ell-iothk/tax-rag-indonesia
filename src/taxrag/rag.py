@@ -48,9 +48,7 @@ def format_konteks(docs) -> str:
 
 
 def buat_chain(mode: str = None, top_n: int = 5):
-    retriever = get_retriever(COLLECTION, CHUNKS,
-                             **({"mode": mode} if mode else {}),
-                             top_n=top_n)
+    retriever = get_retriever(COLLECTION, CHUNKS, **({"mode": mode} if mode else {}), top_n=top_n)
     prompt = ChatPromptTemplate.from_template(TEMPLATE)
     llm = get_llm(temperature=0)
 
@@ -60,12 +58,11 @@ def buat_chain(mode: str = None, top_n: int = 5):
         pertanyaan=lambda x: x["pertanyaan"],
     )
 
-    jawab = (
-        RunnablePassthrough.assign(konteks=lambda x: format_konteks(x["docs"]))
-        | RunnableParallel(
-            jawaban=prompt | llm | StrOutputParser(),
-            docs=lambda x: x["docs"],
-        )
+    jawab = RunnablePassthrough.assign(
+        konteks=lambda x: format_konteks(x["docs"])
+    ) | RunnableParallel(
+        jawaban=prompt | llm | StrOutputParser(),
+        docs=lambda x: x["docs"],
     )
 
     return ambil | jawab
@@ -84,10 +81,11 @@ if __name__ == "__main__":
     for q in PERTANYAAN:
         print("=" * 70)
         print("TANYA :", q)
-        hasil = chain.invoke({"pertanyaan": q},
-                             config={"callbacks": [tracer]})
+        hasil = chain.invoke({"pertanyaan": q}, config={"callbacks": [tracer]})
         print("JAWAB :", hasil["jawaban"].strip())
-        sumber = [f"{d.metadata.get('doc')} {d.metadata.get('pasal') or ''}".strip()
-                  for d in hasil["docs"]]
+        sumber = [
+            f"{d.metadata.get('doc')} {d.metadata.get('pasal') or ''}".strip()
+            for d in hasil["docs"]
+        ]
         print("CHUNK :", sumber)
         print()

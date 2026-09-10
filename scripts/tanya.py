@@ -1,18 +1,17 @@
 """CLI interaktif untuk RAG perpajakan."""
 
-import sys
 import time
 
-from taxrag.rag import buat_chain
 from taxrag.models import get_tracer
+from taxrag.rag import buat_chain
 from taxrag.retrieval import MODE, TOP_N
 
 BANNER = f"""
-{'=' * 62}
+{"=" * 62}
   ASISTEN PAJAK — RAG lokal
   korpus  : PMK 168/2023, PP 58/2023
   mode    : {MODE}, top_n={TOP_N}
-{'=' * 62}
+{"=" * 62}
   ketik pertanyaan, atau:
     /sumber   tampilkan chunk yang dipakai jawaban terakhir
     /keluar   selesai
@@ -53,8 +52,7 @@ def main():
 
         t0 = time.perf_counter()
         try:
-            terakhir = chain.invoke({"pertanyaan": q},
-                                    config={"callbacks": [tracer]})
+            terakhir = chain.invoke({"pertanyaan": q}, config={"callbacks": [tracer]})
         except Exception as e:
             print(f"  error: {e}\n")
             continue

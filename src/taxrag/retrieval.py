@@ -1,19 +1,17 @@
-
-#Strategi retrieval untuk RAG.
+# Strategi retrieval untuk RAG.
 import json
+import re
 from pathlib import Path
 
+from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
 from langchain_qdrant import QdrantVectorStore
-from langchain_community.retrievers import BM25Retriever
 
 try:
-    from langchain.retrievers import (EnsembleRetriever,
-                                      ContextualCompressionRetriever)
+    from langchain.retrievers import ContextualCompressionRetriever, EnsembleRetriever
     from langchain.retrievers.document_compressors import CrossEncoderReranker
 except ImportError:
-    from langchain_classic.retrievers import (EnsembleRetriever,
-                                              ContextualCompressionRetriever)
+    from langchain_classic.retrievers import ContextualCompressionRetriever, EnsembleRetriever
     from langchain_classic.retrievers.document_compressors import CrossEncoderReranker
 
 from taxrag.models import get_embeddings, get_reranker
@@ -21,9 +19,9 @@ from taxrag.models import get_embeddings, get_reranker
 QDRANT_URL = "http://localhost:6333"
 
 # ---------------------------------------------------------------- konfigurasi
-MODE = "dense"            # dense | sparse | hybrid | dense_rerank | hybrid_rerank
-TOP_N = 5                  # berapa chunk dikirim ke LLM
-K_KANDIDAT = 20            # over-fetch sebelum rerank
+MODE = "dense"  # dense | sparse | hybrid | dense_rerank | hybrid_rerank
+TOP_N = 5  # berapa chunk dikirim ke LLM
+K_KANDIDAT = 20  # over-fetch sebelum rerank
 BOBOT_HYBRID = (0.7, 0.3)  # (dense, sparse)
 
 
@@ -38,6 +36,7 @@ def muat_docs(path: str | Path) -> list[Document]:
 
 
 # ==================================================== TAHAP 1: KANDIDAT
+
 
 def dense_retriever(collection: str, k: int = 10):
     """Bi-encoder (bge-m3) + HNSW. Menangkap MAKNA, bukan kata.
@@ -70,9 +69,13 @@ def sparse_retriever(chunks_path: str | Path, k: int = 10):
     return r
 
 
-def hybrid_retriever(collection: str, chunks_path: str | Path,
-                     k: int = 10, bobot=BOBOT_HYBRID,
-                     k_kandidat: int | None = None):
+def hybrid_retriever(
+    collection: str,
+    chunks_path: str | Path,
+    k: int = 10,
+    bobot=BOBOT_HYBRID,
+    k_kandidat: int | None = None,
+):
     """Gabung dense + sparse dengan RRF (Reciprocal Rank Fusion).
 
     RRF: skor(dok) = sum(1 / (60 + posisi_di_daftar_i))
@@ -89,13 +92,13 @@ def hybrid_retriever(collection: str, chunks_path: str | Path,
     """
     kk = k_kandidat or k
     return EnsembleRetriever(
-        retrievers=[dense_retriever(collection, kk),
-                    sparse_retriever(chunks_path, kk)],
+        retrievers=[dense_retriever(collection, kk), sparse_retriever(chunks_path, kk)],
         weights=list(bobot),
     )
 
 
 # ==================================================== TAHAP 2: RERANK
+
 
 def rerank(base_retriever, top_n: int = TOP_N):
     """Cross-encoder mengurutkan ulang kandidat.
@@ -121,6 +124,7 @@ def rerank(base_retriever, top_n: int = TOP_N):
 
 # ==================================================== PILIHAN AKTIF
 
+
 class _PotongTopN:
     """Bungkus retriever supaya hasilnya tepat top_n.
 
@@ -128,22 +132,21 @@ class _PotongTopN:
     bisa lebih dari k. Kontrak dengan tahap generasi harus pasti supaya
     context window terkendali.
     """
+
     def __init__(self, retriever, top_n: int):
         self.retriever = retriever
         self.top_n = top_n
 
     def invoke(self, query: str, **kwargs):
-        return self.retriever.invoke(query, **kwargs)[:self.top_n]
+        return self.retriever.invoke(query, **kwargs)[: self.top_n]
 
 
-def get_retriever(collection: str, chunks_path: str | Path,
-                  mode: str = MODE, top_n: int = TOP_N):
+def get_retriever(collection: str, chunks_path: str | Path, mode: str = MODE, top_n: int = TOP_N):
     """Kembalikan retriever sesuai mode. Ganti MODE di atas untuk beralih."""
 
     if mode == "hybrid":
         # >>> TERPILIH <<< R@5 0.800, p95 135ms
-        r = hybrid_retriever(collection, chunks_path, top_n,
-                             BOBOT_HYBRID, top_n)
+        r = hybrid_retriever(collection, chunks_path, top_n, BOBOT_HYBRID, top_n)
         return _PotongTopN(r, top_n)
 
     if mode == "dense":
@@ -152,7 +155,7 @@ def get_retriever(collection: str, chunks_path: str | Path,
 
     if mode == "sparse":
         return sparse_retriever(chunks_path, top_n)
-    
+
     if mode == "routed":
         return routed_retriever(collection, chunks_path, top_n)
 
@@ -161,20 +164,20 @@ def get_retriever(collection: str, chunks_path: str | Path,
         return rerank(dense_retriever(collection, K_KANDIDAT), top_n)
 
     if mode == "hybrid_rerank":
-        return rerank(hybrid_retriever(collection, chunks_path,
-                                       K_KANDIDAT, BOBOT_HYBRID, K_KANDIDAT),
-                      top_n)
+        return rerank(
+            hybrid_retriever(collection, chunks_path, K_KANDIDAT, BOBOT_HYBRID, K_KANDIDAT), top_n
+        )
 
     raise ValueError(f"mode tidak dikenal: {mode}")
 
+
 # ==================================================== QUERY ROUTING
 
-import re as _re
 
-POLA_LEKSIKAL = _re.compile(
+POLA_LEKSIKAL = re.compile(
     r"pasal\s+\d+|lampiran\s+huruf\s+[a-z]|"
     r"pmk\s+\d+|pp\s+\d+|nomor\s+\d+|angka\s+\d+",
-    _re.IGNORECASE,
+    re.IGNORECASE,
 )
 
 
@@ -211,7 +214,7 @@ class RoutedRetriever:
     def __init__(self, retriever_leksikal, retriever_semantik):
         self.leksikal = retriever_leksikal
         self.semantik = retriever_semantik
-        self.riwayat = []          # untuk analisis: query mana ke mana
+        self.riwayat = []  # untuk analisis: query mana ke mana
 
     def invoke(self, query: str, **kwargs):
         jenis = klasifikasi_query(query)
@@ -220,18 +223,22 @@ class RoutedRetriever:
         return r.invoke(query, **kwargs)
 
 
-def routed_retriever(collection: str, chunks_path,
-                     top_n: int = TOP_N,
-                     bobot_leksikal=(0.2, 0.8),
-                     bobot_semantik=(0.8, 0.2)):
+def routed_retriever(
+    collection: str,
+    chunks_path,
+    top_n: int = TOP_N,
+    bobot_leksikal=(0.2, 0.8),
+    bobot_semantik=(0.8, 0.2),
+):
     """Query leksikal -> sparse dominan. Query semantik -> dense dominan."""
     lex = _PotongTopN(
-        hybrid_retriever(collection, chunks_path, top_n, bobot_leksikal, top_n),
-        top_n)
+        hybrid_retriever(collection, chunks_path, top_n, bobot_leksikal, top_n), top_n
+    )
     sem = _PotongTopN(
-        hybrid_retriever(collection, chunks_path, top_n, bobot_semantik, top_n),
-        top_n)
+        hybrid_retriever(collection, chunks_path, top_n, bobot_semantik, top_n), top_n
+    )
     return RoutedRetriever(lex, sem)
+
 
 # ==================================================== BELUM DIUJI
 #

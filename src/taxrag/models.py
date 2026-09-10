@@ -1,4 +1,5 @@
 """Model bersama untuk semua project. Dimuat sekali per proses."""
+
 import os
 from functools import lru_cache
 from pathlib import Path
@@ -7,35 +8,26 @@ from dotenv import load_dotenv
 
 # akar repo = tiga tingkat di atas file ini (src/taxrag/models.py -> akar)
 ROOT = Path(__file__).resolve().parent.parent.parent
-
+MODELS = ROOT / "models"
 load_dotenv(ROOT / ".env")
 
-# cache model. bisa ditimpa lewat variabel lingkungan HF_HOME
-os.environ.setdefault("HF_HOME", str(ROOT / ".hf-cache"))
 # jangan unduh format .bin yang lama dan rawan
 os.environ.setdefault("HF_HUB_DISABLE_XET", "0")
 os.environ.setdefault("SAFETENSORS_FAST_GPU", "0")
 
-EMBED_MODEL = "BAAI/bge-m3"
-RERANK_MODEL = "BAAI/bge-reranker-v2-m3"
+EMBED_MODEL = str(MODELS / "bge-m3")
+RERANK_MODEL = str(MODELS / "bge-reranker-v2-m3")
 LLM_MODEL = "qwen3-id"
 
 
 @lru_cache(maxsize=1)
 def get_embeddings():
     from langchain_huggingface import HuggingFaceEmbeddings
+
     print(f"[memuat embedding: {EMBED_MODEL}]")
     return HuggingFaceEmbeddings(
         model_name=EMBED_MODEL,
-        model_kwargs={
-            "device": "cpu",
-            # bge-m3 punya dua format bobot: pytorch_model.bin (2,27 GB, format
-            # lama) dan model.safetensors (2,27 GB). Tanpa flag ini,
-            # sentence-transformers mengunduh .bin lebih dulu, lalu transformers
-            # menolaknya karena CVE-2025-32434 dan mengunduh safetensors juga.
-            # Akibatnya 4,5 GB terunduh untuk satu model, separuhnya terbuang.
-            "model_kwargs": {"use_safetensors": True},
-        },
+        model_kwargs={"device": "cpu"},
         encode_kwargs={"normalize_embeddings": True},
     )
 
@@ -43,6 +35,7 @@ def get_embeddings():
 @lru_cache(maxsize=1)
 def get_llm(temperature: float = 0.0):
     from langchain_ollama import ChatOllama
+
     print(f"[menyambung LLM: {LLM_MODEL}]")
     return ChatOllama(model=LLM_MODEL, temperature=temperature)
 
@@ -50,6 +43,7 @@ def get_llm(temperature: float = 0.0):
 @lru_cache(maxsize=1)
 def get_reranker():
     from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+
     print(f"[memuat reranker: {RERANK_MODEL}]")
     return HuggingFaceCrossEncoder(
         model_name=RERANK_MODEL,
@@ -64,5 +58,6 @@ def get_tracer():
     Dipakai: chain.invoke(x, config={"callbacks": [get_tracer()]})
     """
     from langfuse.langchain import CallbackHandler
+
     print("[tracing: Langfuse aktif]")
     return CallbackHandler()

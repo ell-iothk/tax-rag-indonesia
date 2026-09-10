@@ -1,11 +1,12 @@
 """Bandingkan beberapa konfigurasi retriever pada golden set penuh."""
+
 import json
 import re
 from pathlib import Path
-from tqdm import tqdm
-from ranx import Qrels, Run, compare
 
-from retriever import dense_retriever, sparse_retriever, hybrid_retriever
+from ranx import Qrels, Run, compare
+from retriever import dense_retriever, hybrid_retriever, sparse_retriever
+from tqdm import tqdm
 
 GOLDEN = Path("eval/golden_set.jsonl")
 HASIL = Path("eval/hasil.json")
@@ -36,19 +37,22 @@ def bangun_run(retriever, soal, label: str = "") -> dict:
         unit = {}
         for i, d in enumerate(hasil, 1):
             m = d.metadata
-            nama = f"{m.get('doc')}::{kunci}" if cocok(m, kunci) else \
-                   f"{m.get('doc')}::{m.get('pasal') or m.get('bab') or '?'}"
+            nama = (
+                f"{m.get('doc')}::{kunci}"
+                if cocok(m, kunci)
+                else f"{m.get('doc')}::{m.get('pasal') or m.get('bab') or '?'}"
+            )
             unit[nama] = max(unit.get(nama, 0.0), 1.0 / i)
         run[q["id"]] = unit
     return run
 
 
 if __name__ == "__main__":
-    soal = [json.loads(l) for l in open(GOLDEN, encoding="utf-8")]
+    soal = [json.loads(baris) for baris in open(GOLDEN, encoding="utf-8")]
     soal = [q for q in soal if q["category"] != "unanswerable"]
 
     qrels = {
-        q["id"]: {f"{q['source_doc'].replace('.pdf','')}::{kunci_dari(q['source_section'])}": 1}
+        q["id"]: {f"{q['source_doc'].replace('.pdf', '')}::{kunci_dari(q['source_section'])}": 1}
         for q in soal
     }
 
