@@ -123,7 +123,15 @@ ollama pull qwen3:4b-instruct-2507-q4_K_M
 ollama create qwen3-id -f Modelfile.qwen3-id
 ollama ps        # pastikan "100% GPU" dengan CONTEXT 8192
 ```
+Unduh model embedding dan reranker:
 
+```bash
+python scripts/download_models.py
+```
+
+Sekitar 4,4 GB ke folder `models/`, sekali saja. Model disimpan sebagai
+file biasa, bukan cache HuggingFace — struktur cache mudah rusak kalau ada
+file terhapus manual dan sulit didiagnosis.
 Nyalakan database:
 
 ```bash
@@ -141,7 +149,7 @@ python scripts/index_qdrant.py    # chunk → Qdrant (2–5 menit di CPU)
 ### Pakai
 
 ```bash
-./jalan.sh
+./rag.sh
 ```
 
 ```
