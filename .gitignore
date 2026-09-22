@@ -8,7 +8,6 @@
 __pycache__/
 *.pyc
 
-
 # hasil olahan, bisa dibuat ulang dengan: python scripts/ingest.py
 data/processed/
 

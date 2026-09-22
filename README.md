@@ -110,9 +110,6 @@ pip install -e .
 > salinan, sehingga perubahan kode langsung berlaku tanpa install ulang.
 > Ini yang membuat `from taxrag.retrieval import ...` bekerja dari folder
 > mana pun, tanpa perlu mengutak-atik `sys.path`.
->
-> Model embedding (bge-m3, 2,2 GB) dan reranker (bge-reranker-v2-m3, 2,2 GB)
-
 
 Siapkan model bahasa:
 
@@ -133,9 +130,15 @@ file terhapus manual dan sulit didiagnosis.
 Nyalakan database:
 
 ```bash
-cp .env.example .env      # isi secret, lihat komentar di dalamnya
-docker compose up -d #hanya menyalakan qdrant, secret di .env boleh kosong
-docker compose --profile observability up -d #menyalakan juga langfuse dan secret wajib diisi 
+cp .env.example .env
+docker compose up -d      # Qdrant saja, secret di .env boleh kosong
+```
+
+Opsional, untuk tracing dengan Langfuse (isi dulu secret di `.env`,
+lihat komentar di dalamnya):
+
+```bash
+docker compose --profile observability up -d
 ```
 
 Bangun index:
