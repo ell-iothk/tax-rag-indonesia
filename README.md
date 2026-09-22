@@ -96,6 +96,18 @@ Tabel TER (127 baris tarif) diverifikasi terhadap **8 contoh perhitungan resmi**
 - [Ollama](https://ollama.com)
 - Python 3.10+
 
+### Jalur cepat
+
+```bash
+make setup    # sekali saja: venv, model, LLM, .env
+make index    # nyalakan Qdrant dan bangun index
+make chat     # mulai tanya-jawab
+```
+
+Jalankan `make help` untuk daftar semua perintah. Langkah manualnya
+dijelaskan di bawah bagi yang ingin memahami tiap tahap.
+
+
 ### Setup
 
 ```bash
@@ -289,3 +301,4 @@ Teknik yang belum diuji ditulis sebagai kerangka berkomentar di `src/taxrag/chun
 ## Lisensi
 
 MIT, lihat [LICENSE](LICENSE).
+
