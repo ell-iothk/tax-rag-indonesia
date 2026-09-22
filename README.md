@@ -112,9 +112,7 @@ pip install -e .
 > mana pun, tanpa perlu mengutak-atik `sys.path`.
 >
 > Model embedding (bge-m3, 2,2 GB) dan reranker (bge-reranker-v2-m3, 2,2 GB)
-> diunduh otomatis saat pertama dijalankan ke `.hf-cache/`. Sediakan ~5 GB
-> ruang disk. Kalau sudah punya cache HuggingFace di tempat lain:
-> `export HF_HOME=/jalur/ke/cache`
+
 
 Siapkan model bahasa:
 
@@ -136,7 +134,8 @@ Nyalakan database:
 
 ```bash
 cp .env.example .env      # isi secret, lihat komentar di dalamnya
-docker compose up -d
+docker compose up -d #hanya menyalakan qdrant, secret di .env boleh kosong
+docker compose --profile observability up -d #menyalakan juga langfuse dan secret wajib diisi 
 ```
 
 Bangun index:

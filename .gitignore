@@ -8,10 +8,8 @@
 __pycache__/
 *.pyc
 
-# cache model (~4 GB)
-.hf-cache
 
-# hasil olahan, bisa dibuat ulang dengan: python src/ingest.py
+# hasil olahan, bisa dibuat ulang dengan: python scripts/ingest.py
 data/processed/
 
 # PDF asli dari JDIH, bisa diunduh ulang. link ada di README
