@@ -127,6 +127,7 @@ python scripts/download_models.py
 Sekitar 4,4 GB ke folder `models/`, sekali saja. Model disimpan sebagai
 file biasa, bukan cache HuggingFace — struktur cache mudah rusak kalau ada
 file terhapus manual dan sulit didiagnosis.
+
 Nyalakan database:
 
 ```bash
@@ -287,4 +288,4 @@ Teknik yang belum diuji ditulis sebagai kerangka berkomentar di `src/taxrag/chun
 
 ## Lisensi
 
-MIT
+MIT, lihat [LICENSE](LICENSE).
