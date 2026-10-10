@@ -2,7 +2,7 @@
 
 import time
 
-from taxrag.models import get_tracer
+from taxrag.models import callbacks
 from taxrag.rag import buat_chain
 from taxrag.retrieval import MODE, TOP_N
 
@@ -22,7 +22,7 @@ def main():
     print(BANNER)
     print("memuat model...")
     chain = buat_chain()
-    tracer = get_tracer()
+    print("tracing:", "aktif" if callbacks() else "nonaktif")
     terakhir = None
     print("siap.\n")
 
@@ -52,7 +52,7 @@ def main():
 
         t0 = time.perf_counter()
         try:
-            terakhir = chain.invoke({"pertanyaan": q}, config={"callbacks": [tracer]})
+            terakhir = chain.invoke({"pertanyaan": q}, config={"callbacks": callbacks()})
         except Exception as e:
             print(f"  error: {e}\n")
             continue

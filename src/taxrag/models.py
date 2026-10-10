@@ -53,11 +53,20 @@ def get_reranker():
 
 @lru_cache(maxsize=1)
 def get_tracer():
-    """Callback handler Langfuse. Pasang ke chain, semua langkah terekam.
+    """Callback handler Langfuse, atau None kalau tracing tidak dikonfigurasi.
 
-    Dipakai: chain.invoke(x, config={"callbacks": [get_tracer()]})
+    Tracing itu opsional: tanpa key di .env sistem tetap jalan tanpa
+    membanjiri terminal dengan error 401.
     """
+    if not (os.getenv("LANGFUSE_PUBLIC_KEY") and os.getenv("LANGFUSE_SECRET_KEY")):
+        return None
+
     from langfuse.langchain import CallbackHandler
 
-    print("[tracing: Langfuse aktif]")
     return CallbackHandler()
+
+
+def callbacks() -> list:
+    """Daftar callback untuk chain.invoke(). Kosong kalau tracing mati."""
+    tracer = get_tracer()
+    return [tracer] if tracer else []

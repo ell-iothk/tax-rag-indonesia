@@ -4,7 +4,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 
-from taxrag.models import get_llm, get_tracer
+from taxrag.models import get_llm, callbacks
 from taxrag.retrieval import get_retriever
 
 COLLECTION = "tax_docs"
@@ -70,7 +70,7 @@ def buat_chain(mode: str = None, top_n: int = 5):
 
 if __name__ == "__main__":
     chain = buat_chain()
-    tracer = get_tracer()
+
 
     PERTANYAAN = [
         "Biaya jabatan maksimal berapa setahun?",
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     for q in PERTANYAAN:
         print("=" * 70)
         print("TANYA :", q)
-        hasil = chain.invoke({"pertanyaan": q}, config={"callbacks": [tracer]})
+        hasil = chain.invoke({"pertanyaan": q}, config={"callbacks": callbacks()})
         print("JAWAB :", hasil["jawaban"].strip())
         sumber = [
             f"{d.metadata.get('doc')} {d.metadata.get('pasal') or ''}".strip()

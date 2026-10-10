@@ -7,7 +7,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from taxrag.models import get_tracer
+from taxrag.models import callbacks
 from taxrag.rag import buat_chain
 
 GOLDEN = Path("eval/golden_set.jsonl")
@@ -71,14 +71,14 @@ def skor_kemiripan(jawaban: str, benar: str) -> float:
 
 if __name__ == "__main__":
     chain = buat_chain()
-    tracer = get_tracer()
+  
 
     soal = [json.loads(baris) for baris in open(GOLDEN, encoding="utf-8")]
 
     hasil, waktu = [], []
     for q in tqdm(soal, desc="menjawab"):
         t0 = time.perf_counter()
-        out = chain.invoke({"pertanyaan": q["question"]}, config={"callbacks": [tracer]})
+        out = chain.invoke({"pertanyaan": q["question"]}, config={"callbacks": callbacks()})
         waktu.append(time.perf_counter() - t0)
 
         jawaban = out["jawaban"].strip()
