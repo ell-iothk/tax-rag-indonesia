@@ -107,7 +107,6 @@ make chat     # mulai tanya-jawab
 Jalankan `make help` untuk daftar semua perintah. Langkah manualnya
 dijelaskan di bawah bagi yang ingin memahami tiap tahap.
 
-
 ### Setup
 
 ```bash
