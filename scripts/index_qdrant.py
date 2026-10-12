@@ -1,8 +1,9 @@
 """Muat chunk ke Qdrant."""
 
 import json
-from pathlib import Path
 import os
+from pathlib import Path
+
 from langchain_core.documents import Document
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient

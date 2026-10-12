@@ -1,8 +1,9 @@
 # Strategi retrieval untuk RAG.
 import json
+import os
 import re
 from pathlib import Path
-import os
+
 from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
 from langchain_qdrant import QdrantVectorStore
