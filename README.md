@@ -1,8 +1,8 @@
 # Tax RAG Indonesia
 
-Sistem tanya-jawab dokumen perpajakan Indonesia yang berjalan **sepenuhnya offline** di laptop dengan GPU 6 GB. Tanpa API cloud, tanpa data keluar dari mesin.
+Sistem tanya-jawab dokumen perpajakan Indonesia yang berjalan **sepenuhnya offline** di laptop dengan GPU 6 GB. Tanpa layanan cloud, tanpa data keluar dari mesin. Tersedia sebagai CLI maupun HTTP API, sehingga bisa dipanggil dari aplikasi lain.
 
-> **English summary** — A fully local RAG system for Indonesian tax regulations, running on a single 6 GB consumer GPU. Built with an evaluation-first approach: every retrieval technique was measured against a hand-written golden set before being kept or discarded. Four techniques were tested and rejected based on data, including cross-encoder reranking (211× latency for 2% NDCG gain) and query routing (no measurable improvement).
+> **English summary** — A fully local RAG system for Indonesian tax regulations, running on a single 6 GB consumer GPU, exposed as both a CLI and an HTTP API. Built with an evaluation-first approach: every retrieval technique was measured against a hand-written golden set before being kept or discarded. Four techniques were tested and rejected based on data, including cross-encoder reranking (211× latency for 2% NDCG gain) and query routing (no measurable improvement).
 
 ---
 
@@ -21,9 +21,11 @@ Sistem tanya-jawab dokumen perpajakan Indonesia yang berjalan **sepenuhnya offli
 | Latensi retrieval (p95) | 190 ms |
 | Latensi total per pertanyaan | 2,7 detik |
 
-Diukur pada golden set 30 pertanyaan yang ditulis manual. Metrik retrieval dihitung dengan [ranx](https://github.com/AmenRa/ranx), termasuk uji signifikansi statistik.
+Diukur pada golden set 30 pertanyaan yang ditulis manual, konfigurasi `dense` dengan `top_n=5`. Metrik retrieval dihitung dengan [ranx](https://github.com/AmenRa/ranx), termasuk uji signifikansi statistik. Hasil mentah per konfigurasi ada di [`eval/hasil.json`](eval/hasil.json).
 
 **Halusinasi 0,000** artinya: dari 5 pertanyaan yang jawabannya sengaja tidak ada di dokumen, sistem menolak menjawab kelimanya. Di domain regulasi, ini lebih penting daripada akurasi.
+
+Penolakan itu bukan hanya teks jawaban. Ia masuk ke **kontrak API** sebagai field boolean `ditemukan`, sehingga aplikasi pemanggil bisa membedakan "sistem tidak tahu" dari "ini jawabannya" tanpa mencocokkan string.
 
 ---
 
@@ -35,7 +37,7 @@ Empat teknik diuji lalu **ditolak berdasarkan data**, bukan dipasang karena popu
 |---|---|---|
 | Cross-encoder reranking | NDCG +2%, latensi **211×** (190 ms → 40.167 ms) | Ditolak |
 | Query routing | NDCG turun 0,7068 → 0,6447 | Ditolak |
-| Hybrid search (BM25 + RRF) | Setara dense, NDCG lebih rendah | Ditolak |
+| Hybrid search (BM25 + RRF) | Recall identik, NDCG lebih rendah (0,6595) | Ditolak |
 | Ragas faithfulness | Timeout 100% (25/25 soal) di GPU 6 GB | Ditolak |
 
 Kodenya tetap ada dan dinonaktifkan, lengkap dengan catatan kapan keputusannya harus dibalik — misalnya reranker layak dipakai kalau ada GPU terpisah.
@@ -44,16 +46,24 @@ Kodenya tetap ada dan dinonaktifkan, lengkap dengan catatan kapan keputusannya h
 
 ## Arsitektur
 
-```
-INGESTION (sekali)
-  PDF → PyMuPDF4LLM → Markdown → structure-aware chunking
-      → bge-m3 (CPU) → Qdrant
+```mermaid
+flowchart TD
+    subgraph ingest["INGESTION — sekali"]
+        PDF[PDF] --> MD[PyMuPDF4LLM<br/>Markdown]
+        MD --> CH[Structure-aware<br/>chunking]
+        CH --> EMB1[bge-m3 · CPU]
+        EMB1 --> QD[(Qdrant · HNSW)]
+    end
 
-QUERY (tiap pertanyaan)
-  pertanyaan → bge-m3 (CPU)     ~120 ms
-             → HNSW di Qdrant    ~15 ms   → 5 potongan
-             → prompt + grounding
-             → Qwen3 4B (GPU)  ~2.400 ms  → jawaban + sitasi
+    subgraph query["QUERY — tiap pertanyaan"]
+        Q[Pertanyaan] --> EMB2[bge-m3 · CPU<br/>~120 ms]
+        EMB2 --> SEARCH[HNSW · ~15 ms]
+        QD -.-> SEARCH
+        SEARCH --> TOP[5 potongan]
+        TOP --> PROMPT[Prompt + grounding]
+        PROMPT --> LLM[Qwen3 4B · GPU<br/>~2.400 ms]
+        LLM --> ANS[Jawaban + sitasi]
+    end
 ```
 
 | Lapisan | Pilihan | Perangkat |
@@ -64,8 +74,9 @@ QUERY (tiap pertanyaan)
 | Vector DB | Qdrant (HNSW) | Docker |
 | Generator | Qwen3 4B Instruct Q4_K_M via Ollama | **GPU** |
 | Orkestrasi | LangChain LCEL | — |
+| Antarmuka | CLI + FastAPI | CPU |
 | Evaluasi | ranx + metrik deterministik | — |
-| Observability | Langfuse (self-host) | Docker |
+| Observability | Langfuse (self-host, opsional) | Docker |
 
 **Pembagian perangkat disengaja.** VRAM 6 GB hanya cukup untuk satu model. Embedding dijalankan di CPU karena sifatnya batch dan tidak butuh real-time; GPU disediakan penuh untuk model bahasa.
 
@@ -101,11 +112,11 @@ Tabel TER (127 baris tarif) diverifikasi terhadap **8 contoh perhitungan resmi**
 ```bash
 make setup    # sekali saja: venv, model, LLM, .env
 make index    # nyalakan Qdrant dan bangun index
-make chat     # mulai tanya-jawab
+make chat     # mulai tanya-jawab di terminal
+make api      # atau jalankan sebagai HTTP API di :8000
 ```
 
-Jalankan `make help` untuk daftar semua perintah. Langkah manualnya
-dijelaskan di bawah bagi yang ingin memahami tiap tahap.
+Jalankan `make help` untuk daftar semua perintah. Langkah manualnya dijelaskan di bawah bagi yang ingin memahami tiap tahap.
 
 ### Setup
 
@@ -115,12 +126,16 @@ cd tax-rag-indonesia
 
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install -e ".[api]"
 ```
+
 > `-e` berarti *editable install* — proyek dipasang sebagai tautan, bukan
 > salinan, sehingga perubahan kode langsung berlaku tanpa install ulang.
 > Ini yang membuat `from taxrag.retrieval import ...` bekerja dari folder
 > mana pun, tanpa perlu mengutak-atik `sys.path`.
+>
+> Tambahan `[api]` memasang FastAPI dan uvicorn. Untuk CLI saja, `pip install -e .`
+> sudah cukup. Grup `[dev]` berisi ruff dan pytest.
 
 Siapkan model bahasa:
 
@@ -129,15 +144,14 @@ ollama pull qwen3:4b-instruct-2507-q4_K_M
 ollama create qwen3-id -f Modelfile.qwen3-id
 ollama ps        # pastikan "100% GPU" dengan CONTEXT 8192
 ```
+
 Unduh model embedding dan reranker:
 
 ```bash
 python scripts/download_models.py
 ```
 
-Sekitar 4,4 GB ke folder `models/`, sekali saja. Model disimpan sebagai
-file biasa, bukan cache HuggingFace — struktur cache mudah rusak kalau ada
-file terhapus manual dan sulit didiagnosis.
+Sekitar 4,4 GB ke folder `models/`, sekali saja. Model disimpan sebagai file biasa, bukan cache HuggingFace — struktur cache mudah rusak kalau ada file terhapus manual dan sulit didiagnosis.
 
 Nyalakan database:
 
@@ -146,8 +160,7 @@ cp .env.example .env
 docker compose up -d      # Qdrant saja, secret di .env boleh kosong
 ```
 
-Opsional, untuk tracing dengan Langfuse (isi dulu secret di `.env`,
-lihat komentar di dalamnya):
+Opsional, untuk tracing dengan Langfuse (isi dulu secret di `.env`, lihat komentar di dalamnya):
 
 ```bash
 docker compose --profile observability up -d
@@ -160,7 +173,7 @@ python scripts/ingest.py          # PDF → 88 chunk
 python scripts/index_qdrant.py    # chunk → Qdrant (2–5 menit di CPU)
 ```
 
-### Pakai
+### Pakai lewat CLI
 
 ```bash
 ./rag.sh
@@ -177,6 +190,77 @@ Biaya jabatan maksimal sebesar Rp6.000.000 setahun
 ```
 
 Perintah CLI: `/sumber` menampilkan potongan yang dipakai, `/keluar` untuk selesai.
+
+### Pakai lewat API
+
+Dua jalur. **Langsung di host**, memakai venv dan Ollama yang sudah ada:
+
+```bash
+make api        # uvicorn di :8000
+```
+
+**Atau lewat Docker**, yang membangun image API dan menyambungkannya ke Qdrant:
+
+```bash
+make api-up     # docker compose --profile api up -d --build
+```
+
+Saat pertama dijalankan, container menyiapkan prasyaratnya sendiri: mengunduh model kalau volume masih kosong, menunggu Qdrant siap, lalu membangun index kalau koleksi `tax_docs` belum ada. Langkah-langkah itu idempoten, sehingga `up` kedua tidak mengulang apa pun. Ollama tetap di host dan dihubungi lewat `host.docker.internal`.
+
+Dokumentasi interaktif tersedia di **`http://localhost:8000/docs`**, dibuat otomatis oleh FastAPI dari skema Pydantic.
+
+#### `POST /v1/tanya`
+
+```bash
+curl -s -X POST localhost:8000/v1/tanya \
+  -H 'content-type: application/json' \
+  -d '{"pertanyaan":"Biaya jabatan maksimal berapa setahun?"}'
+```
+
+```json
+{
+  "jawaban": "Biaya jabatan maksimal sebesar Rp6.000.000 setahun (potongan [1], PMK 168/2023 Pasal 10 ayat (2)).",
+  "ditemukan": true,
+  "sitasi": [
+    { "doc": "pmk168-2023", "pasal": "Pasal 10" },
+    { "doc": "pmk168-2023", "pasal": "Pasal 11" }
+  ],
+  "potongan": [
+    { "doc": "pmk168-2023", "pasal": "Pasal 10", "teks": "..." }
+  ],
+  "latensi_ms": 2714
+}
+```
+
+`sitasi` dan `potongan` memuat kelima potongan yang dipakai; contoh di atas dipendekkan.
+
+Untuk pertanyaan yang jawabannya tidak ada di korpus, `ditemukan` bernilai `false` dan `sitasi` dikosongkan — menyitir pasal untuk jawaban yang tidak ditemukan justru menyesatkan:
+
+```json
+{
+  "jawaban": "Tidak ditemukan dalam dokumen.",
+  "ditemukan": false,
+  "sitasi": [],
+  "potongan": [ "..." ],
+  "latensi_ms": 1980
+}
+```
+
+#### `GET /health`
+
+Mengecek Qdrant dan Ollama secara nyata, bukan sekadar membalas `ok`. Mengembalikan `503` kalau salah satu tidak bisa dihubungi, sehingga cocok dipakai sebagai probe.
+
+```json
+{ "status": "sehat", "qdrant": "siap", "llm": "siap", "jumlah_titik": 88 }
+```
+
+#### Konfigurasi
+
+| Variabel | Default | Keterangan |
+|---|---|---|
+| `QDRANT_URL` | `http://localhost:6333` | Di dalam compose diisi `http://qdrant:6333` |
+| `OLLAMA_BASE_URL` | `http://localhost:11434` | Di dalam compose diisi `http://host.docker.internal:11434` |
+| `CORS_ORIGINS` | kosong | Daftar origin dipisah koma. Kosong berarti CORS mati; hanya perlu kalau dipanggil langsung dari browser |
 
 ### Evaluasi ulang
 
@@ -230,7 +314,9 @@ Potongan ke-5 tidak relevan dan membelokkan model dari jawaban yang ada di poton
 
 ### Metrik retrieval hanya proksi
 
-Dense unggul di NDCG (0,7068 versus 0,6595) dan MRR, tetapi kualitas jawabannya identik dengan hybrid — 0,640 pada tiga jalan masing-masing. Keputusan retrieval harus diverifikasi terhadap keluaran akhir, bukan berhenti di metrik perantara.
+Dense, hybrid, dan routed menghasilkan Recall@5 yang **identik** (0,800). Yang membedakan hanya peringkat di dalamnya: dense unggul di NDCG (0,7068 versus 0,6595) dan MRR. Namun kualitas jawaban akhirnya sama persis dengan hybrid — 0,640 pada tiga jalan masing-masing.
+
+Artinya keputusan retrieval harus diverifikasi terhadap keluaran akhir, bukan berhenti di metrik perantara. Dense tetap dipilih karena peringkatnya lebih baik tanpa biaya tambahan, bukan karena jawabannya lebih baik.
 
 ### Skor embedding tidak boleh dipakai sebagai ambang mutlak
 
@@ -247,11 +333,13 @@ Instruksi "baca semua potongan" berhasil menghilangkan halusinasi dari 0,200 men
 | Batasan | Penjelasan |
 |---|---|
 | **Golden set 25 soal terjawab** | Terlalu kecil untuk uji signifikansi yang kuat. Selisih 2 soal adalah noise |
+| **API satu permintaan sekaligus** | VRAM 6 GB hanya cukup untuk satu inferensi LLM, jadi uvicorn dijalankan dengan `--workers 1`. Menambah worker bukan mempercepat melainkan memperebutkan GPU |
 | **Reranker tidak dipakai** | Batasan VRAM, bukan batasan teknik. Dengan GPU terpisah, Recall@5 naik ke 0,840 |
 | **Ragas faithfulness gagal** | Butuh 3–5 panggilan LLM berurutan per soal; timeout 180 detik terlampaui di 100% soal |
 | **Kategori lexical 0/3** | Query yang menyebut nomor pasal harfiah masih gagal. Kata umum seperti "PP", "58", "Tahun" muncul di hampir semua potongan sehingga BM25 kehilangan sinyal pembeda |
 | **Model 4B** | Salah memilih item dari daftar bertingkat (q010). Terverifikasi bukan masalah retrieval — jawabannya ada di potongan pertama |
 | **PDF ditulis ulang** | Bukan salinan resmi. Untuk keperluan nyata, rujuk PDF asli di `data/raw_asli/` |
+| **Tanpa autentikasi** | API dirancang untuk dijalankan di jaringan sendiri. Kalau diekspos ke publik, taruh di belakang reverse proxy dengan autentikasi dan rate limit |
 
 ---
 
@@ -259,18 +347,22 @@ Instruksi "baca semua potongan" berhasil menghilangkan halusinasi dari 0,200 men
 
 ```
 .
-.
-├── pyproject.toml        metadata + dependensi (PEP 621)
+├── pyproject.toml        metadata + dependensi (PEP 621), grup [dev] dan [api]
+├── Makefile              setup, layanan, evaluasi, lint
 ├── src/
 │   └── taxrag/           package inti, di-import
-│       ├── models.py     pemuat model dengan cache
+│       ├── models.py     pemuat model dengan cache, tracer opsional
 │       ├── chunking.py   pipeline chunking + teknik lain (dikomentari)
 │       ├── retrieval.py  dense/sparse/hybrid/rerank/routed
 │       └── rag.py        LCEL chain
+├── api/
+│   └── main.py           FastAPI: /v1/tanya, /health
 ├── scripts/              entry point, dijalankan langsung
 │   ├── ingest.py         PDF → chunk
 │   ├── index_qdrant.py   chunk → Qdrant
+│   ├── download_models.py
 │   ├── tanya.py          CLI interaktif
+│   ├── mulai_api.py      entrypoint container: siapkan prasyarat lalu uvicorn
 │   ├── evaluate*.py      evaluator
 │   └── _arsip/           skrip diagnosis dan pendekatan yang ditinggalkan
 ├── data/
@@ -281,17 +373,14 @@ Instruksi "baca semua potongan" berhasil menghilangkan halusinasi dari 0,200 men
 │   ├── golden_set.jsonl  30 soal, ditulis manual
 │   ├── hasil.json        metrik retrieval per konfigurasi
 │   └── hasil_jawaban.json
-├── docker-compose.yml
+├── Dockerfile            image API
+├── docker-compose.yml    qdrant (default), api, observability (profile)
 ├── Modelfile.qwen3-id
-└── rag.sh                startup satu perintah
+├── rag.sh                startup satu perintah untuk CLI
+└── LICENSE
 ```
 
-Pemisahan `src/` dan `scripts/` mengikuti **src-layout** yang direkomendasikan
-PyPA: `src/taxrag/` berisi kode yang di-*import*, `scripts/` berisi kode yang
-di-*jalankan*. Karena akar repo tidak berisi package apa pun, satu-satunya cara
-import bekerja adalah benar-benar meng-install — sehingga kesalahan setup
-ketahuan di mesin sendiri, bukan di mesin orang lain.
-
+Pemisahan `src/` dan `scripts/` mengikuti **src-layout** yang direkomendasikan PyPA: `src/taxrag/` berisi kode yang di-*import*, `scripts/` berisi kode yang di-*jalankan*. Karena akar repo tidak berisi package apa pun, satu-satunya cara import bekerja adalah benar-benar meng-install — sehingga kesalahan setup ketahuan di mesin sendiri, bukan di mesin orang lain.
 
 Teknik yang belum diuji ditulis sebagai kerangka berkomentar di `src/taxrag/chunking.py` dan `src/taxrag/retrieval.py`, lengkap dengan penjelasan cara kerja: parent-child chunking, semantic chunking, late chunking, MMR, metadata pre-filter, HyDE, multi-query.
 
@@ -300,4 +389,3 @@ Teknik yang belum diuji ditulis sebagai kerangka berkomentar di `src/taxrag/chun
 ## Lisensi
 
 MIT, lihat [LICENSE](LICENSE).
-
