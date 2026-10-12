@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-
+import os
 from langchain_core.documents import Document
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
@@ -10,7 +10,7 @@ from qdrant_client import QdrantClient
 from taxrag.models import get_embeddings
 
 CHUNKS = Path("data/processed/chunks.jsonl")
-QDRANT_URL = "http://localhost:6333"
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 COLLECTION = "tax_docs"
 
 

@@ -71,7 +71,6 @@ def skor_kemiripan(jawaban: str, benar: str) -> float:
 
 if __name__ == "__main__":
     chain = buat_chain()
-  
 
     soal = [json.loads(baris) for baris in open(GOLDEN, encoding="utf-8")]
 

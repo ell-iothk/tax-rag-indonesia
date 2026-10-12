@@ -1,6 +1,15 @@
-.PHONY: help setup install models llm up up-obs down index chat eval eval-jawaban latensi lint
+.PHONY: help setup install models llm up up-obs down index chat eval eval-jawaban latensi lint api api-up image
 
 PYTHON := .venv/bin/python
+
+api: ## Jalankan API lokal di :8000
+	$(PYTHON) -m uvicorn api.main:app --reload --port 8000
+
+api-up: ## Nyalakan API lewat Docker
+	docker compose --profile api up -d --build
+
+image: ## Build image API
+	docker build -t ghcr.io/ell-iothk/tax-rag-indonesia:latest .
 
 help: ## Tampilkan daftar perintah
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-14s %s\n", $$1, $$2}'

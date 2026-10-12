@@ -1,0 +1,14 @@
+.git/
+.venv/
+models/
+data/processed/
+data/raw_asli/
+eval/hasil*
+__pycache__/
+*.pyc
+*.egg-info/
+.env
+.env.*
+!.env.example
+scripts/_arsip/
+tests/

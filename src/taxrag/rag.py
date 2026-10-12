@@ -4,7 +4,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 
-from taxrag.models import get_llm, callbacks
+from taxrag.models import callbacks, get_llm
 from taxrag.retrieval import get_retriever
 
 COLLECTION = "tax_docs"
@@ -70,7 +70,6 @@ def buat_chain(mode: str = None, top_n: int = 5):
 
 if __name__ == "__main__":
     chain = buat_chain()
-
 
     PERTANYAAN = [
         "Biaya jabatan maksimal berapa setahun?",

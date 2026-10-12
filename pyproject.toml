@@ -32,6 +32,11 @@ dev = [
     "ruff",
     "pytest",
 ]
+api = [
+    "fastapi",
+    "uvicorn[standard]",
+    "httpx",
+]
 
 [build-system]
 requires = ["setuptools>=68"]

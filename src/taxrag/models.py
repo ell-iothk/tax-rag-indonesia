@@ -17,7 +17,9 @@ os.environ.setdefault("SAFETENSORS_FAST_GPU", "0")
 
 EMBED_MODEL = str(MODELS / "bge-m3")
 RERANK_MODEL = str(MODELS / "bge-reranker-v2-m3")
+OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 LLM_MODEL = "qwen3-id"
+
 
 
 @lru_cache(maxsize=1)
@@ -37,7 +39,7 @@ def get_llm(temperature: float = 0.0):
     from langchain_ollama import ChatOllama
 
     print(f"[menyambung LLM: {LLM_MODEL}]")
-    return ChatOllama(model=LLM_MODEL, temperature=temperature)
+    return ChatOllama(model=LLM_MODEL, temperature=temperature, base_url=OLLAMA_URL)
 
 
 @lru_cache(maxsize=1)

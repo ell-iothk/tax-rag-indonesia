@@ -1,4 +1,22 @@
 services:
+  api:
+    profiles: ["api"]
+    image: ghcr.io/ell-iothk/tax-rag-indonesia:latest
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      QDRANT_URL: http://qdrant:6333
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+    volumes:
+      - models:/app/models
+      - processed:/app/data/processed
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - qdrant
+    restart: unless-stopped
 
   qdrant:
     image: qdrant/qdrant:v1.19.1
@@ -128,6 +146,8 @@ services:
 
 volumes:
   qdrant_data:
+  models:
+  processed:
   postgres_data:
   clickhouse_data:
   clickhouse_logs:

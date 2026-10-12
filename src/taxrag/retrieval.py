@@ -2,7 +2,7 @@
 import json
 import re
 from pathlib import Path
-
+import os
 from langchain_community.retrievers import BM25Retriever
 from langchain_core.documents import Document
 from langchain_qdrant import QdrantVectorStore
@@ -16,7 +16,7 @@ except ImportError:
 
 from taxrag.models import get_embeddings, get_reranker
 
-QDRANT_URL = "http://localhost:6333"
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 
 # ---------------------------------------------------------------- konfigurasi
 MODE = "dense"  # dense | sparse | hybrid | dense_rerank | hybrid_rerank
